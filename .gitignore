@@ -1,0 +1,21 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+.Python
+.DS_Store
+
+# Environments
+.venv/
+venv/
+.env
+
+# Project data/artifacts
+dsde/data/raw/
+dsde/artifacts/
+dsde/reports/*.html
+dsde/reports/*.json
+dsde/data/processed/*.parquet
+dsde/data/processed/*.csv
+
+# Notebooks
+.ipynb_checkpoints/
