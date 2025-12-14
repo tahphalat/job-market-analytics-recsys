@@ -19,3 +19,22 @@ dsde/data/processed/*.csv
 
 # Notebooks
 .ipynb_checkpoints/
+
+# ----------------------------
+# Generated data / artifacts
+# ----------------------------
+dsde/artifacts/
+dsde/web/public/artifacts/
+
+# (optional) common ML/data artifacts
+*.parquet
+*.npz
+*.pkl
+*.joblib
+*.onnx
+
+# caches
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store

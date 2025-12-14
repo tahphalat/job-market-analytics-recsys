@@ -6,8 +6,8 @@ from typing import Optional
 import pandas as pd
 import plotly.express as px
 
-from utils.common import ensure_parent, set_seed
-from utils.logging import get_logger
+from src.utils.common import ensure_parent, set_seed
+from src.utils.logging import get_logger
 
 logger = get_logger(__name__)
 

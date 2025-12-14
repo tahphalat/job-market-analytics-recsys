@@ -1,9 +1,12 @@
 pandas
 numpy
+pyarrow
+requests
 scikit-learn
+networkx
 matplotlib
-seaborn
-plotly
-sqlalchemy
-psycopg2-binary
-pydantic
+python-dateutil
+tqdm
+pytest
+joblib
+kagglehub
