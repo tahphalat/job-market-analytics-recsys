@@ -9,7 +9,7 @@ DESCRIPTION_ALIASES = ["description", "job_description", "details"]
 URL_ALIASES = ["job_posting_url", "url", "application_url", "job_url"]
 DATE_ALIASES = ["listed_time", "original_listed_time", "publication_date", "posted_at", "date"]
 SALARY_ALIASES = ["salary", "compensation", "salary_text", "pay", "pay_range"]
-SKILL_ALIASES = ["skills", "skills_desc", "tags"]
+SKILL_ALIASES = ["skills", "tags"]
 
 
 def pick_first_existing_column(df: pd.DataFrame, aliases: Iterable[str]) -> Optional[pd.Series]:

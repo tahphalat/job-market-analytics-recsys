@@ -8,9 +8,6 @@ KAGGLE_OUT_DIR ?= data/raw/kaggle
 KAGGLE_INPUT ?=
 KAGGLE_SCHEMA_PATH ?= $(KAGGLE_OUT_DIR)/jobs_kaggle_raw.parquet
 
-REMOTIVE_OUT_DIR ?= data/raw/remotive
-REMOTIVE_URL ?= https://remotive.com/api/remote-jobs
-REMOTIVE_SCHEMA_PATH ?= $(REMOTIVE_OUT_DIR)/jobs_remotive_raw.parquet
 SCHEMA_REPORT ?= artifacts/schema_report.json
 
 RAW_INPUT ?= data/raw/input.csv
@@ -31,13 +28,11 @@ extract:
 	@if [ -z "$(KAGGLE_INPUT)" ]; then echo "KAGGLE_INPUT is required (path to Kaggle CSV/Parquet)"; exit 1; fi
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.extract.fetch_kagglehub --dataset $(KAGGLE_DATASET) --out_dir $(KAGGLE_OUT_DIR) --seed $(SEED)
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.extract.ingest_kaggle $(if $(KAGGLE_INPUT),--input_path $(KAGGLE_INPUT),) --out_dir $(KAGGLE_OUT_DIR) --sample_n $(SAMPLE_N) --seed $(SEED)
-	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.extract.fetch_remotive --api_url $(REMOTIVE_URL) --out_dir $(REMOTIVE_OUT_DIR) --sample_n $(SAMPLE_N) --seed $(SEED)
-	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.utils.schema_report $(if $(KAGGLE_SCHEMA_PATH),--kaggle-path $(KAGGLE_SCHEMA_PATH),) --remotive-path $(REMOTIVE_SCHEMA_PATH) --output $(SCHEMA_REPORT) --seed $(SEED)
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.utils.schema_report $(if $(KAGGLE_SCHEMA_PATH),--kaggle-path $(KAGGLE_SCHEMA_PATH),) --output $(SCHEMA_REPORT) --seed $(SEED)
 
 transform:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.transform.clean_kaggle --input $(KAGGLE_OUT_DIR)/jobs_kaggle_raw.parquet --output data/processed/jobs_kaggle_clean.parquet --seed $(SEED)
-	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.transform.clean_remotive --input $(REMOTIVE_OUT_DIR)/jobs_remotive_raw.parquet --output data/processed/jobs_remotive_clean.parquet --seed $(SEED)
-	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.transform.build_canonical_jobs --kaggle data/processed/jobs_kaggle_clean.parquet --remotive data/processed/jobs_remotive_clean.parquet --output data/processed/jobs_canonical.parquet --seed $(SEED)
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.transform.build_canonical_jobs --kaggle data/processed/jobs_kaggle_clean.parquet --output data/processed/jobs_canonical.parquet --seed $(SEED)
 
 eda:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.viz.eda --input $(TRANSFORM_OUT) --output $(EDA_OUT) --seed $(SEED)

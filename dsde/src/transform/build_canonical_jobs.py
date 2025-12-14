@@ -82,18 +82,15 @@ def ensure_job_id(df: pd.DataFrame) -> pd.Series:
     return df.apply(make_id, axis=1)
 
 
-def build_canonical(kaggle_path: Path, remotive_path: Path, output_path: Path, seed: int) -> Path:
+def build_canonical(kaggle_path: Path, output_path: Path, seed: int) -> Path:
     pd.set_option("mode.copy_on_write", True)
-    dfs = []
-    for path in [kaggle_path, remotive_path]:
-        if path.exists():
-            dfs.append(pd.read_parquet(path))
-        else:
-            logger.warning("Missing input for canonical build: %s", path)
-    if not dfs:
-        raise FileNotFoundError("No cleaned job tables found for canonical build.")
+    
+    if kaggle_path.exists():
+        df = pd.read_parquet(kaggle_path)
+    else:
+        raise FileNotFoundError(f"Missing input for canonical build: {kaggle_path}")
 
-    df = pd.concat(dfs, ignore_index=True)
+    # Dedupe within the single source just in case
     df = dedupe(df)
     df["job_id"] = ensure_job_id(df)
     df = df[CANONICAL_COLUMNS]
@@ -105,11 +102,10 @@ def build_canonical(kaggle_path: Path, remotive_path: Path, output_path: Path, s
     df.to_csv(csv_path, index=False)
     export_skill_aliases()  # ensure aliases file exists for downstream
     logger.info(
-        "Canonical jobs saved to %s and %s (rows=%s sources=%s)",
+        "Canonical jobs saved to %s and %s (rows=%s)",
         output_path,
         csv_path,
-        len(df),
-        df["source"].value_counts().to_dict(),
+        len(df)
     )
     return output_path
 
@@ -125,7 +121,7 @@ def parse_args() -> argparse.Namespace:
 
 def main():
     args = parse_args()
-    build_canonical(Path(args.kaggle), Path(args.secondary), Path(args.output), seed=args.seed)
+    build_canonical(Path(args.kaggle), Path(args.output), seed=args.seed)
 
 
 if __name__ == "__main__":

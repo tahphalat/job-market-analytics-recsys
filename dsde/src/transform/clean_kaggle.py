@@ -97,6 +97,38 @@ def compute_job_id(source: str, source_job_id: Optional[str], source_url: Option
     return hashlib.sha1(base.encode("utf-8")).hexdigest()
 
 
+def load_skills_data(base_dir: Path) -> pd.DataFrame:
+    """Load and join job_skills.csv with mappings/skills.csv"""
+    try:
+        # Try to locate files relative to base_dir
+        # Structure is usually: .../kaggle/ -> jobs/job_skills.csv, mappings/skills.csv
+        # But input_path might be .../kaggle/jobs_kaggle_raw.parquet
+        root = base_dir.parent if base_dir.is_file() else base_dir
+        
+        # Look for jobs/job_skills.csv
+        job_skills_path = root / "jobs" / "job_skills.csv"
+        if not job_skills_path.exists():
+             # Fallback: check if they are in same dir
+             job_skills_path = root / "job_skills.csv"
+             
+        mapping_path = root / "mappings" / "skills.csv"
+        
+        if not job_skills_path.exists() or not mapping_path.exists():
+            logger.warning("Skills auxiliary files not found at %s. Skills will be empty.", root)
+            return pd.DataFrame(columns=["job_id", "skill_name"])
+            
+        js_df = pd.read_csv(job_skills_path)
+        map_df = pd.read_csv(mapping_path)
+        
+        # Merge to get names
+        merged = js_df.merge(map_df, on="skill_abr", how="left")
+        merged["skill_name"] = merged["skill_name"].fillna(merged["skill_abr"]) # Fallback to abr
+        
+        return merged[["job_id", "skill_name"]]
+    except Exception as e:
+        logger.warning("Failed to load skills data: %s", e)
+        return pd.DataFrame(columns=["job_id", "skill_name"])
+
 def clean_kaggle(input_path: Path, output_path: Path, seed: int) -> Path:
     try:
         df = read_auto(input_path)
@@ -111,7 +143,9 @@ def clean_kaggle(input_path: Path, output_path: Path, seed: int) -> Path:
 
     out = pd.DataFrame(index=df.index)
     out["source"] = pd.Series(["kaggle"] * len(df), index=df.index)
+    # job_id in raw is typically integers (e.g. 3884428798). Ensure it matches job_skills.csv
     out["source_job_id"] = pick_first_existing_column(df, ["job_id"]).astype("Int64").astype(str)
+    
     out["source_url"] = resolve_column(df, ALIAS_MAP["source_url"], default=None)
     out["title"] = resolve_column(df, ALIAS_MAP["title"], default=None)
     out["company"] = resolve_column(df, ALIAS_MAP["company"], default=None)
@@ -119,9 +153,24 @@ def clean_kaggle(input_path: Path, output_path: Path, seed: int) -> Path:
     out["country"] = extract_country(out["location_text"])
     out["description_text"] = resolve_column(df, ALIAS_MAP["description_text"], default=None)
 
-    skills_list, skills_text = build_skills(df)
-    out["skills"] = skills_list
-    out["skills_text"] = skills_text
+    # --- Skills Merging ---
+    # 1. Load external skills
+    skills_df = load_skills_data(input_path)
+    # 2. Group by job_id
+    if not skills_df.empty:
+        # skills_df job_id might be int, source_job_id is str. convert for join
+        skills_df["job_str"] = skills_df["job_id"].astype(str)
+        grouped = skills_df.groupby("job_str")["skill_name"].apply(lambda x: sorted(list(set(x))))
+        # 3. Map to main df
+        out["skills"] = out["source_job_id"].map(grouped)
+        # Fill NaNs with empty list
+        out["skills"] = out["skills"].apply(lambda x: x if isinstance(x, list) else [])
+    else:
+        # Fallback to internal column (likely empty now that we removed skills_desc)
+        skills_list, _ = build_skills(df)
+        out["skills"] = skills_list
+
+    out["skills_text"] = out["skills"].apply(lambda x: ", ".join(x) if x else "")
 
     salary_min, salary_max, salary_text = parse_salary(
         df.get("min_salary", pd.Series([None] * len(df))),
@@ -146,7 +195,6 @@ def clean_kaggle(input_path: Path, output_path: Path, seed: int) -> Path:
     logger.info("Saved Kaggle clean to %s (rows=%s)", output_path, len(out))
     return output_path
 
-
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Clean Kaggle raw jobs into canonical schema.")
     parser.add_argument("--input", default=RAW_KAGGLE_DIR / "jobs_kaggle_raw.parquet", help="Path to Kaggle raw parquet.")
@@ -154,11 +202,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--seed", type=int, default=SEED, help="Random seed.")
     return parser.parse_args()
 
-
 def main():
     args = parse_args()
     clean_kaggle(Path(args.input), Path(args.output), seed=args.seed)
-
 
 if __name__ == "__main__":
     main()

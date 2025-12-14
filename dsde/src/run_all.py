@@ -10,9 +10,9 @@ from src.utils.logging import get_logger
 # Import pipeline steps directly
 from src.extract.fetch_kagglehub import fetch_kagglehub_dataset
 from src.extract.ingest_kaggle import ingest_kaggle_file
-from src.extract.fetch_secondary_kaggle import fetch_secondary_dataset
+# from src.extract.fetch_secondary_kaggle import fetch_secondary_dataset
 from src.transform.clean_kaggle import clean_kaggle
-from src.transform.clean_secondary import clean_secondary
+# from src.transform.clean_secondary import clean_secondary
 from src.transform.build_canonical_jobs import build_canonical
 from src.analytics.build_tables import build_tables
 from src.analytics.make_figures import make_figures
@@ -56,13 +56,10 @@ def run_pipeline(kaggle_input: Optional[str], kaggle_dataset: str, skip_extract:
     def step_transform():
         clean_kaggle(Path("data/raw/kaggle/jobs_kaggle_raw.parquet"), 
                      Path("data/processed/jobs_kaggle_clean.parquet"), seed)
-        clean_secondary(Path("data/raw/kaggle/secondary"), 
-                       Path("data/processed/jobs_secondary_clean.parquet"), seed)
 
     @pipe.task(name="Transform_Canonical")
     def step_canonical():
         build_canonical(Path("data/processed/jobs_kaggle_clean.parquet"),
-                        Path("data/processed/jobs_secondary_clean.parquet"),
                         Path("data/processed/jobs_canonical.parquet"), seed)
 
     # --- 4. Quality Check (Trusted/Curated) ---
@@ -92,8 +89,9 @@ def run_pipeline(kaggle_input: Optional[str], kaggle_dataset: str, skip_extract:
 
 
     # Execution
+    # Execution
     pipe.add_task(step_extract_kaggle)
-    pipe.add_task(step_extract_secondary)
+    # pipe.add_task(step_extract_secondary) # Removed
     pipe.add_task(step_dq_raw)
     pipe.add_task(step_transform)
     pipe.add_task(step_canonical)

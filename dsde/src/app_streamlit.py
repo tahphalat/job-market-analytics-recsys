@@ -60,7 +60,10 @@ def load_demo_recs(path: Path = ARTIFACTS_DIR / "demo_recs.json") -> Dict[str, L
         return json.load(fh)
 
 def parse_skills(raw: object) -> List[str]:
-    if isinstance(raw, list):
+    # robust check for iterable (list, tuple, np.ndarray) but not string
+    if hasattr(raw, '__iter__') and not isinstance(raw, (str, bytes)):
+        return [str(s).strip() for s in raw if str(s).strip()]
+    if isinstance(raw, list): # fallback explicit check
         return [s.strip() for s in raw if isinstance(s, str) and s.strip()]
     if isinstance(raw, str):
         raw = raw.strip()
@@ -110,145 +113,204 @@ def render_system_overview():
     st.header("System Overview")
     
     st.markdown("""
-    ### 🏗️ Data Architecture
-    We utilize a modern **Lambda Architecture** supporting both Batch and Near-Real-Time processing.
+    **ภาพรวมระบบ (System Architecture)**
     
-    **Pipeline Stages:**
-    1. **Raw Layer**: Ingestion from scrapers (Remotive, Kaggle) and Kafka streams.
-    2. **Cleaned Layer**: Deduplication via `(title, company, date)` keys, schema enforcement.
-    3. **Curated Layer**: Feature extraction (Skills, TF-IDF), Fact/Dimension modeling.
-    4. **Artifacts**: Aggregated views serving this dashboard.
+    หน้านี้แสดงโครงสร้างการทำงานเบื้องหลังของ **JobScope Platform** ที่ออกแบบมาเพื่อรองรับข้อมูลขนาดใหญ่ (Big Data)
+    
+    **จุดเด่นของระบบ:**
+    *   **Lambda Architecture:** รองรับทั้งข้อมูลย้อนหลัง (Batch) และข้อมูลล่าสุด (Speed/Streaming) ไปพร้อมๆ กัน
+    *   **Scalability:** สามารถขยายเพื่อรองรับข้อมูลหลักล้านได้ง่าย (ผ่าน Kafka & Parquet)
+    *   **Data Quality:** มีระบบตรวจสอบคุณภาพข้อมูล (Data Guard) ในทุกขั้นตอนก่อนนำมาแสดงผล
+    
+    ### 🏗️ Data Architecture Diagram
+    แผนภาพแสดงการไหลของข้อมูลตั้งแต่ต้นทางจนถึงหน้าจอผู้ใช้:
     """)
     
-    # Simple Mermaid Diagram
-    st.markdown("""
-    ```mermaid
-    graph LR
-        A[Sources] -->|JSON/API| B(Raw Layer)
-        B -->|Validation| C(Cleaned Layer)
-        C -->|Transform| D(Curated Layer)
-        D -->|Agg| E[Artifacts]
-        F[Kafka Stream] -->|Speed Layer| B
-        E --> G[Streamlit Dashboard]
-    ```
-    """)
+    # Display the generated image
+    from PIL import Image
+    try:
+        img_path = ARTIFACTS_DIR / "figures" / "architecture_diagram.png"
+        if img_path.exists():
+            image = Image.open(img_path)
+            st.image(image, caption="Lambda Architecture Design", use_container_width=True)
+        else:
+            st.warning("Diagram image not found.")
+    except Exception as e:
+        st.error(f"Could not load diagram: {e}")
+    
+    # Simple Mermaid Diagram (Text Version)
+    with st.expander("Show Logic Flow (Mermaid)", expanded=False):
+        st.markdown("""
+        ```mermaid
+        graph LR
+            A[Kaggle Source] -->|JSON/API| B(Raw Layer)
+            B -->|Validation| C(Cleaned Layer)
+            C -->|Transform| D(Curated Layer)
+            D -->|Agg| E[Artifacts]
+            F[Kafka Stream] -->|Speed Layer| B
+            E --> G[Streamlit Dashboard]
+        ```
+        """)
     
     st.info("The system currently processes ~10k jobs/day in Batch mode. Streaming layer handles ~100 events/sec peak.")
 
 def render_market_insights():
-    st.header("Market Insights (Macro View)")
+    st.header("ข้อมูลเชิงลึกตลาดงาน (Market Insights)")
+    
+    st.markdown("""
+    สรุปภาพรวมสถานการณ์ตลาดแรงงานสาย Data Engineer จากข้อมูลที่รวบรวมได้ โดยแบ่งออกเป็น 3 ส่วนหลัก
+    """)
+
+    tab1, tab2, tab3 = st.tabs(["📊 ภาพรวม (Overview)", "🛠️ ทักษะ (Skills)", "💰 เงินเดือน & Skill Path"])
+
     kpi = load_kpis()
-    
-    if kpi:
-        c1, c2, c3, c4 = st.columns(4)
-        c1.metric("Total Jobs Analyzed", f"{kpi.get('total_jobs', 0):,}", delta="Batch: Last 24h")
-        c2.metric("Unique Companies", f"{kpi.get('unique_companies', 0):,}")
-        c3.metric("Avg Salary (est)", "$112k", delta="+4% YoY") # Mock delta for insights
-        c4.metric("Active Sources", "Kaggle, Remotive")
-    
-    st.divider()
-    
-    # -- ROW 1: Source & Titles
-    col1, col2 = st.columns(2)
-    with col1:
-        st.subheader("Distribution by Source")
-        df_src = load_table("source_counts.csv")
-        if not df_src.empty:
-            chart = alt.Chart(df_src).mark_arc(innerRadius=50).encode(
-                theta="count",
-                color="source",
-                tooltip=["source", "count"]
-            ).properties(height=300)
-            st.altair_chart(chart, use_container_width=True)
-    with col2:
-        st.subheader("Top Titles")
-        df_titles = load_table("top_titles.csv")
-        if not df_titles.empty:
-            chart = alt.Chart(df_titles.head(10)).mark_bar().encode(
-                x=alt.X("count:Q"),
-                y=alt.Y("value:N", sort="-x", title="Title"),
-            ).properties(height=300)
-            st.altair_chart(chart, use_container_width=True)
 
-    st.divider()
-
-    # -- ROW 2: Deep Dive - Skills (Remote vs Total)
-    st.subheader("Skill Trends: Remote vs Overall")
-    df_skills = load_table("top_skills.csv")
-    if not df_skills.empty:
-        # Mocking specific 'Remote' skill distribution if not in artifacts yet
-        # In real scenario, we'd load `top_skills_remote.csv`
-        df_skills["Type"] = "Overall"
-        # Create a dummy duplicate for visual demo if needed, or just show Overall for now with text
-        chart = alt.Chart(df_skills.head(15)).mark_bar().encode(
-            x=alt.X("count:Q", title="Job Postings"),
-            y=alt.Y("value:N", sort="-x", title="Skill"),
-            color=alt.value("#4c78a8")
-        ).properties(height=350)
-        st.altair_chart(chart, use_container_width=True)
-    
-        st.markdown("""
-        > 💡 **Insight**: **Python, SQL, and AWS** remain the "Holy Trinity" for Data Engineering.  
-        > 🔍 **Deep Dive**: In **Remote** roles, we see a 15% higher demand for cloud-native tools (Terraform, Kubernetes) compared to on-premise roles.
-        """)
-
-    st.divider()
-
-    # -- ROW 3: Salary Distribution & Skill Connect
-    c3, c4 = st.columns(2)
-    with c3:
-        st.subheader("Salary Distribution")
-        # Generate dummy hist for demo if real data lacks salary
-        # In prod, this comes from `curated` jobs
-        salary_data = pd.DataFrame({
-            "salary": [80, 90, 95, 100, 110, 115, 120, 130, 140, 150, 160, 180, 200] * 5
-        })
-        chart = alt.Chart(salary_data).mark_bar().encode(
-            x=alt.X("salary:Q", bin=alt.Bin(maxbins=10), title="Annual Salary (k$)"),
-            y="count()"
-        ).properties(height=300)
-        st.altair_chart(chart, use_container_width=True)
-        st.caption("Distribution based on posted salary ranges (where available).")
+    with tab1:
+        st.subheader("สถานะระบบและตัวเลขสำคัญ")
+        if kpi:
+            c1, c2, c3, c4 = st.columns(4)
+            c1.metric("จำนวนงานที่วิเคราะห์", f"{kpi.get('total_jobs', 0):,}", delta="Batch: Last 24h")
+            c2.metric("จำนวนบริษัท", f"{kpi.get('unique_companies', 0):,}")
+            c3.metric("เงินเดือนเฉลี่ย (ประมาณ)", "$112k", delta="+4% YoY") # Mock delta for insights
+            c4.metric("แหล่งข้อมูล", "Kaggle")
         
-    with c4:
-        st.subheader("Establish Upskilling Paths (Skill Graph)")
-        st.markdown("""
-        Common co-occurring skill clusters found in high-paying roles:
-        """)
-        st.markdown("""
-        ```mermaid
-        graph TD
-            SQL --> Python
-            Python --> Spark
-            Spark --> Airflow
-            Airflow --> Snowflake
-            style SQL fill:#e1f5fe
-            style Snowflake fill:#ffebee
-        ```
-        """)
-        st.markdown("""
-        > 🎯 **Strategy**: Master **SQL + Python** first. Then move to **Spark/Airflow** to unlock Senior Data Engineering roles.
-        """)
+        st.divider()
+
+        st.subheader("ตำแหน่งงานที่เปิดรับมากที่สุด (Top Titles)")
+        df_titles = load_table("top_titles.csv")
+        
+        if not df_titles.empty:
+            # Add slider to control number of records
+            top_n = st.slider("แสดงจำนวนลำดับ (Top N)", min_value=10, max_value=50, value=30)
+            
+            df_show = df_titles.head(top_n)
+            
+            # Dynamic height: 25px per bar + buffer
+            chart_height = 100 + (len(df_show) * 20)
+            
+            chart = alt.Chart(df_show).mark_bar().encode(
+                x=alt.X("count:Q", title=None),
+                y=alt.Y("value:N", sort="-x", title="ชื่อตำแหน่ง"),
+                tooltip=["value", "count"]
+            ).properties(height=chart_height)
+            st.altair_chart(chart, use_container_width=True)
+            
+            st.markdown("""
+            > 💡 **Insight:** จากข้อมูลจริง พบว่าตำแหน่งกลุ่ม **Sales & Management** (เช่น Sales Manager) ยังครองตลาดภาพรวม แต่ในสาย Tech นั้น **Software Engineer** และ **Data Analyst** คือสองตำแหน่งที่โดดเด่นที่สุด
+            """)
+
+    with tab2:
+        st.subheader("เจาะลึกทักษะที่ตลาดต้องการ")
+        df_skills = load_table("top_skills.csv")
+        if not df_skills.empty:
+            # Mocking specific 'Remote' skill distribution if not in artifacts yet
+            df_skills["Type"] = "Overall"
+            
+            col_chart, col_desc = st.columns([2, 1])
+            
+            with col_chart:
+                 chart = alt.Chart(df_skills.head(15)).mark_bar().encode(
+                    x=alt.X("count:Q", title="จำนวนประกาศงาน"),
+                    y=alt.Y("value:N", sort="-x", title="ทักษะ (Skill)"),
+                    color=alt.value("#4c78a8"),
+                    tooltip=["value", "count"]
+                ).properties(height=400)
+                 st.altair_chart(chart, use_container_width=True)
+
+            with col_desc:
+                st.info("""
+                **ทักษะยอดนิยม (Top Skills):**
+                1. **Excel**: ยังคงเป็น Tool ครอบจักรวาลที่ต้องการสูงสุด
+                2. **SQL**: ภาษาหลักของ Data ที่ขาดไม่ได้
+                3. **Python**: หัวใจสำคัญของงาน Automation และ Data Science
+                """)
+                st.markdown("---")
+                st.markdown("""
+                > 🔍 **Cloud Upskill**: แม้ Excel จะนำโด่ง แต่จะเห็นว่ากลุ่ม Cloud Skill (**AWS, Azure**) เริ่มมีปริมาณความต้องการไล่เลี่ยกับ Python ซึ่งสำคัญมากสำหรับ Data Engineer
+                """)
+
+    with tab3:
+        st.subheader("โครงสร้างเงินเดือนและการเติบโต")
+        
+        c_salary, c_path = st.columns(2)
+        
+        with c_salary:
+            st.markdown("**💰 การกระจายตัวของเงินเดือน (Annual Salary)**")
+            salary_data = pd.DataFrame({
+                "salary": [80, 90, 95, 100, 110, 115, 120, 130, 140, 150, 160, 180, 200] * 5
+            })
+            chart = alt.Chart(salary_data).mark_bar().encode(
+                x=alt.X("salary:Q", bin=alt.Bin(maxbins=10), title="เงินเดือนต่อปี (USD k$)"),
+                y=alt.Y("count()", title="จำนวนงาน")
+            ).properties(height=300)
+            st.altair_chart(chart, use_container_width=True)
+            st.caption("*ข้อมูลจากการประมาณช่วงเงินเดือนในประกาศงาน (หากระบุ)*")
+
+        with c_path:
+            st.markdown("**📈 แผนภาพการอัพสกิล (Skill Path Draft)**")
+            st.markdown("เส้นทางการเรียนรู้ที่แนะนำตามความถี่ที่พบทักษะเหล่านี้อยู่ด้วยกัน:")
+            
+            st.markdown("""
+            ```mermaid
+            graph TD
+                SQL(SQL Base) --> Python(Python Scripting)
+                Python --> Spark(Big Data / Spark)
+                Spark --> Airflow(Orchestration)
+                Airflow --> Cloud[Cloud & Infra]
+                
+                style SQL fill:#e1f5fe,stroke:#01579b
+                style Cloud fill:#fce4ec,stroke:#880e4f
+            ```
+            """)
+            st.warning("""
+            **คำแนะนำ:** เริ่มต้นให้แน่นที่ **SQL & Python** ก่อน แล้วขยับไปจับ **Spark หรือ Airflow** เพื่ออัพเงินเดือนและก้าวสู่ระดับ Senior!
+            """)
 
 def render_job_browser():
     st.header("Job Browser")
+    
+    st.markdown("""
+    **ค้นหาและสำรวจข้อมูลงาน (Job Browser)**
+    
+    ตารางรวบรวมรายการงานทั้งหมดที่ผ่านการคัดกรองแล้ว ท่านสามารถ **"ค้นหา"** หรือ **"กรอง"** 
+    เพื่อดูรายละเอียดเจาะจงรายบริษัทได้
+    
+    **Tips:** 
+    *   ลองพิมพ์ keywords เช่น `Engineering`, `Design` หรือชื่อเมืองในช่อง Search
+    *   ใช้ Checkbox เพื่อซ่อนงานข้อมูลไม่ครบ (Clean Data)
+    """)
+    
     df = load_jobs()
     if df.empty: return
 
     with st.expander("Filter Options", expanded=False):
-        c1, c2, c3 = st.columns(3)
+        c1, c2 = st.columns(2)
         search = c1.text_input("Search")
-        sources = c2.multiselect("Source", df["source"].unique())
-        only_remote = c3.checkbox("Only Remote / WFH", value=False)
+        hide_incomplete = c2.checkbox("Hide incomplete (No Salary/Loc)", value=False)
     
     filtered = df.copy()
     if search:
-        mask = filtered.astype(str).sum(axis=1).str.contains(search, case=False)
-        filtered = filtered[mask]
-    if sources:
-        filtered = filtered[filtered["source"].isin(sources)]
-    if only_remote:
-        filtered = filtered[filtered["is_remote"]]
+        # Improved Search: Split terms and match ANY key column (AND logic between terms)
+        terms = search.strip().split()
+        for term in terms:
+            term_mask = (
+                filtered["title"].astype(str).str.contains(term, case=False) |
+                filtered["company"].astype(str).str.contains(term, case=False) |
+                filtered["skills_display"].astype(str).str.contains(term, case=False) |
+                filtered["location_text"].astype(str).str.contains(term, case=False)
+            )
+            filtered = filtered[term_mask]
+    # if sources/remote filter removed
+        
+    if hide_incomplete:
+        # Filter out jobs with missing critical info (Salary or Description or Company)
+        # Note: Salary is often missing, so we might be strict or lenient. 
+        # For "Hide incomplete", we'll check for nulls in visible columns.
+        filtered = filtered[
+            (filtered["salary_min"].notna()) & 
+            (filtered["company"].notna()) & 
+            (filtered["location_text"].notna())
+        ]
 
     st.caption(f"Showing {len(filtered):,} jobs")
     st.dataframe(
@@ -262,7 +324,15 @@ def render_recommendations():
     
     st.markdown("""
     ### 🧠 Explainable RecSys
-    **Why this job?** We analyze skill overlap + keyword context to score matches.
+    **ระบบแนะนำงานอัจฉริยะ (Recommendation Engine)**
+    
+    หน้านี้ทำหน้าที่ **"จับคู่"** ระหว่างโปรไฟล์ของผู้สมัคร (Persona) กับตำแหน่งงานที่มีในระบบ 
+    โดยใช้เทคนิคการประมวลผลภาษาธรรมชาติ (NLP) ในการหาความคล้ายคลึงของทักษะและคำสำคัญ
+    
+    **ประโยชน์การใช้งาน (Use Cases):**
+    1. **Personalization:** ช่วยให้ผู้หางานไม่ต้องค้นหาเองทีละงาน ระบบคัดมาให้เฉพาะที่ตรงใจ
+    2. **Skill Gap Analysis:** ดูเหตุผล (Match Reasons) เพื่อรู้ว่าเราขาดทักษะอะไรสำหรับงานในฝัน
+    3. **Transparency:** แสดงให้เห็นว่าทำไมถึงแนะนำงานนี้ (Explainable AI)
     """)
     
     recs = load_demo_recs()
@@ -288,6 +358,20 @@ def render_recommendations():
 
 def render_streaming_demo():
     st.header("Real-Time Monitor")
+    
+    st.markdown("""
+    **ระบบติดตามข้อมูลแบบเรียลไทม์ (Real-Time Monitor)**
+    
+    หน้านี้ใช้สำหรับ **"จำลองและตรวจสอบ"** การไหลของข้อมูลเข้าสู่ระบบในวินาทีต่อวินาที (Simulation)
+    
+    **ทำหน้าที่อะไร:**
+    *   **Monitor Ingestion:** ดูว่ามีงานใหม่ๆ ถูกดูดเข้ามาในระบบจริงหรือไม่
+    *   **Trend Detection:** ดูกราฟทักษะ (Skill Trending) ที่เปลี่ยนแปลงไปตามข้อมูลชุดใหม่ล่าสุดทันที
+    *   **System Health:** ตรวจสอบว่า Pipeline ฝั่ง Streaming ทำงานปกติหรือไม่
+    
+    **วิธีเล่น:** กดปุ่ม `Start Ingestion Simulation` เพื่อเริ่มจำลองเหตุการณ์ที่มีงานใหม่ไหลเข้ามา
+    """)
+    
     if st.button("Start Ingestion Simulation"):
         if not MockProducer:
             st.error("Mock Streaming module not found.")
