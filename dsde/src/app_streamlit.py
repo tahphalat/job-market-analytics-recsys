@@ -450,13 +450,6 @@ def main():
                 "Full dataset (~120k) not loaded.",
                 icon="⚠️"
             )
-        else:
-            st.sidebar.success(
-                f"✅ **Full Data Mode**\n\n"
-                f"Loaded **{len(df_check):,} jobs**.\n"
-                "Running on 100% of dataset.",
-                icon="🚀"
-            )
 
     nav = st.sidebar.radio("Navigation", [
         "System Overview",
