@@ -98,7 +98,7 @@ def load_jobs(path: Path = PROCESSED_DIR / "jobs_canonical.parquet") -> pd.DataF
         parts = sorted(path.parent.glob("jobs_canonical_part_*.parquet"))
         if parts:
             try:
-                st.toast(f"ℹ️ Loading {len(parts)} data chunks...", icon="📂")
+                # st.toast removed to prevent CacheReplayClosureError
                 dfs = [read_auto(p) for p in parts]
                 df = pd.concat(dfs, ignore_index=True)
                 data_source = "split"
@@ -109,7 +109,7 @@ def load_jobs(path: Path = PROCESSED_DIR / "jobs_canonical.parquet") -> pd.DataF
     if df.empty:
         sample_path = path.parent / "jobs_canonical_sample.parquet"
         if sample_path.exists():
-            st.toast("⚠️ Using Sample Data (10k rows)", icon="ℹ️")
+            # st.toast removed to prevent CacheReplayClosureError
             df = read_auto(sample_path)
             data_source = "sample"
 
