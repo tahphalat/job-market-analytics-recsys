@@ -10,14 +10,12 @@ try:
 except ImportError:
     kagglehub = None
 
-
 from src.config import RAW_KAGGLE_DIR, SEED
 from src.utils.common import set_seed
 from src.utils.io import safe_mkdir
 from src.utils.logging import get_logger
 
 logger = get_logger(__name__)
-
 
 def copy_downloaded_files(download_path: Path, out_dir: Path) -> List[str]:
     files: List[str] = []
@@ -40,14 +38,14 @@ def copy_downloaded_files(download_path: Path, out_dir: Path) -> List[str]:
     return files
 
 
-def fetch_kagglehub_dataset(dataset: str, out_dir: Path, seed: int) -> Path:
+def fetch_secondary_dataset(dataset: str, out_dir: Path, seed: int) -> Path:
     set_seed(seed)
     out_dir = safe_mkdir(out_dir)
-    logger.info("Downloading KaggleHub dataset %s into %s", dataset, out_dir)
+    logger.info("Downloading Secondary Kaggle dataset %s into %s", dataset, out_dir)
 
     if kagglehub is None:
         logger.warning("kagglehub not installed. Skipping download of %s", dataset)
-        return Path(out_dir) # Return existing dir if exists, else it might fail later steps.
+        return Path(out_dir)
 
     download_path = Path(kagglehub.dataset_download(dataset))
     if not download_path.exists():
@@ -61,7 +59,7 @@ def fetch_kagglehub_dataset(dataset: str, out_dir: Path, seed: int) -> Path:
         "out_dir": str(out_dir),
         "files": copied_files,
     }
-    meta_path = out_dir / "kaggle_download_meta.json"
+    meta_path = out_dir / "secondary_download_meta.json"
     with open(meta_path, "w") as f:
         json.dump(meta, f, indent=2)
     logger.info("Wrote download metadata to %s", meta_path)
@@ -69,20 +67,21 @@ def fetch_kagglehub_dataset(dataset: str, out_dir: Path, seed: int) -> Path:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Fetch a Kaggle dataset via KaggleHub.")
+    parser = argparse.ArgumentParser(description="Fetch Secondary Kaggle dataset.")
     parser.add_argument(
         "--dataset",
-        default="arshkon/linkedin-job-postings",
-        help="Kaggle dataset slug for KaggleHub download.",
+        default="yusifmohammed/data-engineering-job-postings",
+        help="Kaggle dataset slug.",
     )
-    parser.add_argument("--out_dir", default=RAW_KAGGLE_DIR, help="Destination directory for downloads.")
-    parser.add_argument("--seed", type=int, default=SEED, help="Random seed (consistency).")
+    # Store secondary data in a separate folder to avoid collision, e.g., data/raw/kaggle/secondary
+    parser.add_argument("--out_dir", default=RAW_KAGGLE_DIR / "secondary", help="Destination directory.")
+    parser.add_argument("--seed", type=int, default=SEED, help="Random seed.")
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
-    fetch_kagglehub_dataset(args.dataset, Path(args.out_dir), seed=args.seed)
+    fetch_secondary_dataset(args.dataset, Path(args.out_dir), seed=args.seed)
 
 
 if __name__ == "__main__":

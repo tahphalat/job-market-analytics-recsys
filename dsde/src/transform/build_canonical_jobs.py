@@ -115,9 +115,9 @@ def build_canonical(kaggle_path: Path, remotive_path: Path, output_path: Path, s
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Build canonical jobs table from Kaggle + Remotive clean tables.")
+    parser = argparse.ArgumentParser(description="Build canonical jobs table from Kaggle + Secondary clean tables.")
     parser.add_argument("--kaggle", default=PROCESSED_DIR / "jobs_kaggle_clean.parquet", help="Path to Kaggle clean parquet.")
-    parser.add_argument("--remotive", default=PROCESSED_DIR / "jobs_remotive_clean.parquet", help="Path to Remotive clean parquet.")
+    parser.add_argument("--secondary", default=PROCESSED_DIR / "jobs_secondary_clean.parquet", help="Path to Secondary clean parquet.")
     parser.add_argument("--output", default=PROCESSED_DIR / "jobs_canonical.parquet", help="Output canonical parquet.")
     parser.add_argument("--seed", type=int, default=SEED, help="Random seed.")
     return parser.parse_args()
@@ -125,7 +125,7 @@ def parse_args() -> argparse.Namespace:
 
 def main():
     args = parse_args()
-    build_canonical(Path(args.kaggle), Path(args.remotive), Path(args.output), seed=args.seed)
+    build_canonical(Path(args.kaggle), Path(args.secondary), Path(args.output), seed=args.seed)
 
 
 if __name__ == "__main__":

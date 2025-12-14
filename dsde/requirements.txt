@@ -1,6 +1,7 @@
 pandas
 numpy
 pyarrow
+streamlit
 requests
 scikit-learn
 networkx
