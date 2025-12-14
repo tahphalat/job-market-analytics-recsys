@@ -99,7 +99,7 @@ export function JobBrowser({ jobs }: { jobs: JobLite[] }) {
                                 </div>
                                 {(job.salary_min !== undefined) && (
                                      <div className="shrink-0 text-right">
-                                        <Badge variant="outline" className="border-emerald-500/20 text-emerald-400 bg-emerald-500/5">
+                                        <Badge className="border border-emerald-500/20 text-emerald-400 bg-emerald-500/5">
                                             ${job.salary_min.toLocaleString()} - ${job.salary_max?.toLocaleString()}
                                         </Badge>
                                      </div>

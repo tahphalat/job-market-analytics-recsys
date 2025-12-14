@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, ReactNode } from 'react';
+import { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
 
@@ -11,7 +11,7 @@ type CommonProps = {
 };
 
 type ButtonProps = CommonProps & ButtonHTMLAttributes<HTMLButtonElement> & { href?: undefined };
-type LinkProps = CommonProps & { href: string };
+type LinkProps = CommonProps & AnchorHTMLAttributes<HTMLAnchorElement> & { href: string };
 
 function baseClasses(variant: Variant) {
   if (variant === 'ghost') {
