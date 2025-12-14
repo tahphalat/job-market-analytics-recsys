@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Data Engineer",
+    "profile": "data engineer cloud pipelines spark airflow snowflake kafka aws python sql"
+  },
+  {
+    "name": "Data Analyst",
+    "profile": "data analyst dashboards sql excel tableau business intelligence reporting"
+  },
+  {
+    "name": "Data Scientist",
+    "profile": "data scientist machine learning python pandas sklearn nlp deep learning"
+  }
+]

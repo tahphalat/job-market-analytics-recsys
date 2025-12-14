@@ -1,0 +1,10 @@
+{
+  "files": [
+    "kpi_summary.json",
+    "top_titles.csv",
+    "top_skills.csv",
+    "demo_recs.json",
+    "demo_profiles.json",
+    "graphs/skill_graph.json"
+  ]
+}

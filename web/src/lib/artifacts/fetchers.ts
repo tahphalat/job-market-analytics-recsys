@@ -4,6 +4,7 @@ import Papa from 'papaparse';
 import {
   ArtifactsIndex,
   CountRow,
+  DemoProfile,
   DemoRecsByProfile,
   KpiSummary,
   SkillGraph
@@ -84,6 +85,10 @@ export async function loadTopTitles(): Promise<CountRow[]> {
 
 export async function loadDemoRecs(): Promise<DemoRecsByProfile> {
   return fetchJson<DemoRecsByProfile>('demo_recs.json');
+}
+
+export async function loadDemoProfiles(): Promise<DemoProfile[]> {
+  return fetchJson<DemoProfile[]>('demo_profiles.json');
 }
 
 export async function loadSkillGraph(): Promise<SkillGraph> {

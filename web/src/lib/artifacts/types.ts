@@ -26,6 +26,11 @@ export type DemoRec = {
 
 export type DemoRecsByProfile = Record<string, DemoRec[]>;
 
+export type DemoProfile = {
+  name: string;
+  profile: string;
+};
+
 export type SkillGraphNode = {
   id: string;
   label: string;
