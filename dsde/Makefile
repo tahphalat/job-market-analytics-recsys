@@ -47,10 +47,10 @@ analytics:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.analytics.make_figures --seed $(SEED)
 
 graph:
-	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.viz.eda --input $(TRANSFORM_OUT) --output $(EDA_OUT) --figure $(GRAPH_OUT) --seed $(SEED)
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.transform.skill_graph --input data/processed/jobs_canonical.parquet --output artifacts/graphs/skill_graph.json --min_edge_weight 5 --seed $(SEED)
 
 train:
-	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.models.train_model --input $(TRANSFORM_OUT) --output $(MODEL_OUT) --seed $(SEED)
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.models.train_recommender --input data/processed/jobs_canonical.parquet --model_dir artifacts/recommender --top_k 10 --seed $(SEED)
 
 run_all:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.run_all --input $(RAW_INPUT) --output $(OUTPUT_DIR) --seed $(SEED)
