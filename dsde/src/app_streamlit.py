@@ -82,47 +82,48 @@ def parse_skills(raw: object) -> List[str]:
 
 @st.cache_data(show_spinner=False)
 def load_jobs(path: Path = PROCESSED_DIR / "jobs_canonical.parquet") -> pd.DataFrame:
-    df = pd.DataFrame() # Initialize df
+    df = pd.DataFrame()
+    data_source = None # Track source for debugging/toasts
 
-    # Case 1: Split Files (Full Data Deploy)
-    # Look for parts
-    parts = sorted(path.parent.glob("jobs_canonical_part_*.parquet"))
-    if parts:
-        st.toast(f"ℹ️ Loading {len(parts)} data chunks...", icon="📂")
-        dfs = [read_auto(p) for p in parts]
-        df = pd.concat(dfs, ignore_index=True)
-        
-        # Post-processing for combined data (timestamps, etc.)
-        df["published_at"] = pd.to_datetime(df.get("published_at"), errors="coerce", utc=True)
-        for col in ["salary_min", "salary_max"]:
-            if col in df.columns:
-                df[col] = pd.to_numeric(df[col], errors="coerce")
-        
-        # Recalculate derived
-        df["is_remote"] = df["location_text"].astype(str).str.contains("remote|work from home", case=False)
-        df["skills_parsed"] = df.get("skills", pd.Series(dtype=object)).apply(parse_skills)
-        df["skills_display"] = df["skills_parsed"].apply(lambda items: ", ".join(items))
-        
-        return df
-        
-    # Case 2: Sample Data (Fallback)
-    sample_path = path.parent / "jobs_canonical_sample.parquet"
-    if sample_path.exists():
-        st.toast("⚠️ Using Sample Data (10k rows)", icon="ℹ️")
-        df = read_auto(sample_path)
-        # Proceed to normal processing
-    else:
-         return pd.DataFrame()
-    # Normal Load (Local)
-    try:
-         df = read_auto(path)
-    except Exception:
+    # Priority 1: Main Parquet File (Local Dev / Full)
+    if path.exists():
+        try:
+            df = read_auto(path)
+            data_source = "main"
+        except Exception:
+            pass # Fallback to others if read fails
+
+    # Priority 2: Split Files (Cloud Deployment - Full Data)
+    if df.empty:
+        parts = sorted(path.parent.glob("jobs_canonical_part_*.parquet"))
+        if parts:
+            try:
+                st.toast(f"ℹ️ Loading {len(parts)} data chunks...", icon="📂")
+                dfs = [read_auto(p) for p in parts]
+                df = pd.concat(dfs, ignore_index=True)
+                data_source = "split"
+            except Exception:
+                pass
+
+    # Priority 3: Sample Data (Cloud Deployment - Fallback)
+    if df.empty:
+        sample_path = path.parent / "jobs_canonical_sample.parquet"
+        if sample_path.exists():
+            st.toast("⚠️ Using Sample Data (10k rows)", icon="ℹ️")
+            df = read_auto(sample_path)
+            data_source = "sample"
+
+    # Priority 4: CSV Fallback (Local Dev - Repair)
+    if df.empty:
         csv_fallback = path.with_suffix(".csv")
-        if not csv_fallback.exists():
-            return pd.DataFrame()
-        df = read_auto(csv_fallback)
+        if csv_fallback.exists():
+            df = read_auto(csv_fallback)
+            data_source = "csv"
 
-    # Common Processing (for Single File: Main or Sample)
+    if df.empty:
+        return pd.DataFrame()
+
+    # --- Common Processing ---
 
     # Convert timestamps
     df["published_at"] = pd.to_datetime(df.get("published_at"), errors="coerce", utc=True)
@@ -132,11 +133,12 @@ def load_jobs(path: Path = PROCESSED_DIR / "jobs_canonical.parquet") -> pd.DataF
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce")
     
-    # Create derived columns for filtering/charting
+    # Create derived columns
     df["is_remote"] = df["location_text"].astype(str).str.contains("remote|work from home", case=False)
     
     df["skills_parsed"] = df.get("skills", pd.Series(dtype=object)).apply(parse_skills)
     df["skills_display"] = df["skills_parsed"].apply(lambda items: ", ".join(items))
+    
     return df
 
 # --- SECTIONS ---
