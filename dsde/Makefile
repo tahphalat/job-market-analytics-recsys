@@ -42,7 +42,9 @@ transform:
 eda:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.viz.eda --input $(TRANSFORM_OUT) --output $(EDA_OUT) --seed $(SEED)
 
-analytics: eda
+analytics:
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.analytics.build_tables --input data/processed/jobs_canonical.parquet --seed $(SEED)
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.analytics.make_figures --seed $(SEED)
 
 graph:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.viz.eda --input $(TRANSFORM_OUT) --output $(EDA_OUT) --figure $(GRAPH_OUT) --seed $(SEED)
