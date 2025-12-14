@@ -124,6 +124,9 @@ def load_jobs(path: Path = PROCESSED_DIR / "jobs_canonical.parquet") -> pd.DataF
         return pd.DataFrame()
 
     # --- Common Processing ---
+    # OPTIMIZATION: Drop description_text to save memory (approx 1GB savings)
+    if "description_text" in df.columns:
+        df.drop(columns=["description_text"], inplace=True)
 
     # Convert timestamps
     df["published_at"] = pd.to_datetime(df.get("published_at"), errors="coerce", utc=True)
