@@ -19,7 +19,7 @@ export default function ContactPage() {
       <Card className="space-y-4">
         <SectionTitle title="Find me" subtitle="Reach me through the links below." />
         <div className="flex flex-wrap items-center gap-3">
-          <Button href="https://github.com/phalat.tah" target="_blank" rel="noreferrer">
+          <Button href="https://github.com/tahphalat" target="_blank" rel="noreferrer">
             GitHub
           </Button>
           <Button href="https://www.linkedin.com/in/phalat-lorratthanan-b1a669323/" variant="ghost" target="_blank" rel="noreferrer">
