@@ -7,7 +7,8 @@ import {
   DemoProfile,
   DemoRecsByProfile,
   KpiSummary,
-  SkillGraph
+  SkillGraph,
+  SourceCount
 } from './types';
 
 const ARTIFACT_BASE = '/artifacts';
@@ -97,4 +98,14 @@ export async function loadSkillGraph(): Promise<SkillGraph> {
 
 export async function loadArtifactsIndex(): Promise<ArtifactsIndex> {
   return fetchJson<ArtifactsIndex>('index.json');
+}
+
+export async function loadSourceCounts(): Promise<SourceCount[]> {
+  const rows = await fetchCsv('source_counts.csv');
+  return rows
+    .map((row) => ({
+      source: (row as any).source || (row as any).value,
+      count: Number(row.count || 0)
+    }))
+    .filter((row) => !!row.source);
 }

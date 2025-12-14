@@ -8,8 +8,17 @@ import { Card } from '../../../components/Card';
 import { Badge } from '../../../components/Badge';
 import { Button } from '../../../components/Button';
 import { ArtifactsGate } from '../../../src/components/ArtifactsGate';
-import { ArtifactMissingError, loadDemoProfiles, loadDemoRecs, loadKpiSummary, loadSkillGraph, loadTopSkills, loadTopTitles } from '../../../src/lib/artifacts/fetchers';
-import { DemoProfile, DemoRec, KpiSummary, SkillGraph } from '../../../src/lib/artifacts/types';
+import {
+  ArtifactMissingError,
+  loadDemoProfiles,
+  loadDemoRecs,
+  loadKpiSummary,
+  loadSkillGraph,
+  loadSourceCounts,
+  loadTopSkills,
+  loadTopTitles
+} from '../../../src/lib/artifacts/fetchers';
+import { DemoProfile, DemoRec, KpiSummary, SkillGraph, SourceCount } from '../../../src/lib/artifacts/types';
 
 type TrendDatum = { name: string; count: number };
 
@@ -138,6 +147,7 @@ export default function JobScopePage() {
   const [topTitles, setTopTitles] = useState<TrendDatum[]>([]);
   const [topSkills, setTopSkills] = useState<TrendDatum[]>([]);
   const [graph, setGraph] = useState<SkillGraph | null>(null);
+  const [sourceCounts, setSourceCounts] = useState<SourceCount[]>([]);
   const [recs, setRecs] = useState<Record<string, DemoRec[]>>({});
   const [profiles, setProfiles] = useState<DemoProfile[]>([]);
   const [selectedProfile, setSelectedProfile] = useState<string>('');
@@ -145,25 +155,39 @@ export default function JobScopePage() {
   useEffect(() => {
     let mounted = true;
     async function loadAll() {
+      let firstError: string | null = null;
       try {
-        const [kpiData, titlesData, skillsData, graphData, recsData, profilesData] = await Promise.all([
+        const results = await Promise.allSettled([
           loadKpiSummary(),
           loadTopTitles(),
           loadTopSkills(),
           loadSkillGraph(),
           loadDemoRecs(),
-          loadDemoProfiles()
+          loadDemoProfiles(),
+          loadSourceCounts()
         ]);
         if (!mounted) return;
-        setKpi(kpiData);
-        setTopTitles(titlesData.map((t) => ({ name: t.value, count: t.count })));
-        setTopSkills(skillsData.map((s) => ({ name: s.value, count: s.count })));
-        setGraph(graphData);
-        setRecs(recsData);
-        setProfiles(profilesData);
-        const profileName = profilesData?.[0]?.name || Object.keys(recsData)[0] || '';
+
+        const [kpiRes, titlesRes, skillsRes, graphRes, recsRes, profilesRes, sourceRes] = results;
+
+        if (kpiRes.status === 'fulfilled') setKpi(kpiRes.value);
+        else if (kpiRes.reason) firstError = 'Missing KPI summary.';
+
+        if (titlesRes.status === 'fulfilled') setTopTitles(titlesRes.value.map((t) => ({ name: t.value, count: t.count })));
+        if (skillsRes.status === 'fulfilled') setTopSkills(skillsRes.value.map((s) => ({ name: s.value, count: s.count })));
+        if (graphRes.status === 'fulfilled') setGraph(graphRes.value);
+        if (sourceRes.status === 'fulfilled') setSourceCounts(sourceRes.value);
+
+        if (recsRes.status === 'fulfilled') setRecs(recsRes.value);
+        if (profilesRes.status === 'fulfilled') setProfiles(profilesRes.value);
+
+        const profileName =
+          (profilesRes.status === 'fulfilled' && profilesRes.value?.[0]?.name) ||
+          (recsRes.status === 'fulfilled' && Object.keys(recsRes.value)[0]) ||
+          '';
         setSelectedProfile(profileName);
-        setError(null);
+
+        if (!firstError) setError(null);
       } catch (err) {
         const message = err instanceof ArtifactMissingError ? 'Artifacts missing. Run: make run_all && make export_web' : 'Failed to load artifacts.';
         if (mounted) {
@@ -171,6 +195,7 @@ export default function JobScopePage() {
         }
       } finally {
         if (mounted) setLoading(false);
+        if (mounted && firstError) setError(firstError);
       }
     }
     loadAll();
@@ -183,6 +208,37 @@ export default function JobScopePage() {
     if (!selectedProfile) return [];
     return recs[selectedProfile] ? recs[selectedProfile].slice(0, 10) : [];
   }, [recs, selectedProfile]);
+
+  const insights = useMemo(() => {
+    const bullets: string[] = [];
+    if (topTitles.length > 0) {
+      bullets.push(`ชื่อตำแหน่งที่พบบ่อยสุด: ${topTitles[0].name} (${numberWithCommas(topTitles[0].count)} ครั้ง)`);
+    }
+    if (topSkills.length > 0) {
+      bullets.push(`สกิลเด่น: ${topSkills[0].name}`);
+    } else {
+      bullets.push('ไฟล์ top_skills.csv ว่าง — รัน make run_all && make export_web เพื่ออัปเดต');
+    }
+    const kaggleCount = kpi?.sources?.kaggle || sourceCounts.find((s) => s.source === 'kaggle')?.count || 0;
+    const remotiveCount = kpi?.sources?.remotive || sourceCounts.find((s) => s.source === 'remotive')?.count || 0;
+    const total = kaggleCount + remotiveCount;
+    if (total > 0) {
+      bullets.push(`สัดส่วนแหล่งข้อมูล: Kaggle ${percent(kaggleCount, total)}, Remotive ${percent(remotiveCount, total)}`);
+    }
+    if (kpi?.top_locations && kpi.top_locations.length > 0) {
+      const topLoc = kpi.top_locations[0];
+      bullets.push(`ทำเลพบบ่อย: ${topLoc.location_text} (${numberWithCommas(topLoc.count)})`);
+    }
+    if (graph && graph.nodes?.length) {
+      const dense = [...graph.nodes].sort((a, b) => (b.count || 0) - (a.count || 0))[0];
+      if (dense?.label) bullets.push(`เครือข่ายสกิล: โหนดเด่น = ${dense.label}`);
+    }
+    return bullets.slice(0, 6);
+  }, [topTitles, topSkills, kpi, sourceCounts, graph]);
+
+  const kaggleCount = kpi?.sources?.kaggle || sourceCounts.find((s) => s.source === 'kaggle')?.count || 0;
+  const remotiveCount = kpi?.sources?.remotive || sourceCounts.find((s) => s.source === 'remotive')?.count || 0;
+  const totalSources = kaggleCount + remotiveCount || 1;
 
   const profileBlurb = profiles.find((p) => p.name === selectedProfile)?.profile || selectedProfile;
 
@@ -268,6 +324,47 @@ export default function JobScopePage() {
           <Card>
             <SectionTitle eyebrow="Section C" title="Skill Graph" subtitle="Table fallback showing strongest skill pairs from skill_graph.json." />
             <SkillGraphTable graph={graph} />
+          </Card>
+
+          <Card>
+            <SectionTitle eyebrow="Insights" title="สรุปเร็ว" subtitle="ดึงจาก artifacts แบบอัตโนมัติ" />
+            {insights.length > 0 ? (
+              <ul className="mt-3 list-disc space-y-2 pl-5 text-mist/80">
+                {insights.map((item, idx) => (
+                  <li key={idx}>{item}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-mist/70">กำลังโหลด insights...</p>
+            )}
+          </Card>
+
+          <Card>
+            <SectionTitle eyebrow="Kaggle vs Remotive" title="ภาพรวม vs มุม remote" subtitle="ใช้ source_counts.csv หรือ kpi_summary.json" />
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              <div className="rounded-2xl border border-white/5 bg-ink/60 p-4">
+                <p className="text-sm font-semibold text-cloud">Kaggle (snapshot)</p>
+                <p className="text-sm text-mist/70">ภาพรวมกว้างของตลาด ณ เวลานั้น</p>
+                <p className="mt-2 text-lg font-semibold text-cloud">
+                  {numberWithCommas(kaggleCount)} jobs · {percent(kaggleCount, totalSources)}
+                </p>
+                <ul className="mt-2 list-disc space-y-1 pl-4 text-sm text-mist/80">
+                  <li>เหมาะกับการวัดความต้องการรวม</li>
+                  <li>แต่มี bias จากช่วงเวลาที่ดึง (snapshot)</li>
+                </ul>
+              </div>
+              <div className="rounded-2xl border border-white/5 bg-ink/60 p-4">
+                <p className="text-sm font-semibold text-cloud">Remotive (remote)</p>
+                <p className="text-sm text-mist/70">มุมมอง remote jobs ล่าสุด</p>
+                <p className="mt-2 text-lg font-semibold text-cloud">
+                  {numberWithCommas(remotiveCount)} jobs · {percent(remotiveCount, totalSources)}
+                </p>
+                <ul className="mt-2 list-disc space-y-1 pl-4 text-sm text-mist/80">
+                  <li>โฟกัส remote-friendly roles</li>
+                  <li>ปริมาณน้อยกว่าแต่ชี้เทรนด์ remote</li>
+                </ul>
+              </div>
+            </div>
           </Card>
 
           <Card>
