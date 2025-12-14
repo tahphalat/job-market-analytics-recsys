@@ -31,6 +31,11 @@ export type DemoProfile = {
   profile: string;
 };
 
+export type SourceCount = {
+  source: string;
+  count: number;
+};
+
 export type SkillGraphNode = {
   id: string;
   label: string;
