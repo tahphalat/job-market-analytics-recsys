@@ -35,7 +35,9 @@ extract:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.utils.schema_report $(if $(KAGGLE_SCHEMA_PATH),--kaggle-path $(KAGGLE_SCHEMA_PATH),) --remotive-path $(REMOTIVE_SCHEMA_PATH) --output $(SCHEMA_REPORT) --seed $(SEED)
 
 transform:
-	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.transform.transform --input $(EXTRACT_OUT) --output $(TRANSFORM_OUT) --seed $(SEED)
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.transform.clean_kaggle --input $(KAGGLE_OUT_DIR)/jobs_kaggle_raw.parquet --output data/processed/jobs_kaggle_clean.parquet --seed $(SEED)
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.transform.clean_remotive --input $(REMOTIVE_OUT_DIR)/jobs_remotive_raw.parquet --output data/processed/jobs_remotive_clean.parquet --seed $(SEED)
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.transform.build_canonical_jobs --kaggle data/processed/jobs_kaggle_clean.parquet --remotive data/processed/jobs_remotive_clean.parquet --output data/processed/jobs_canonical.parquet --seed $(SEED)
 
 eda:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.viz.eda --input $(TRANSFORM_OUT) --output $(EDA_OUT) --seed $(SEED)
