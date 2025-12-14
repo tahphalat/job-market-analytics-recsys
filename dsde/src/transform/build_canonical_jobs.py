@@ -100,8 +100,17 @@ def build_canonical(kaggle_path: Path, remotive_path: Path, output_path: Path, s
 
     safe_mkdir(output_path.parent)
     df.to_parquet(output_path, index=False)
+    # Also persist CSV for downstream fallbacks
+    csv_path = output_path.with_suffix(".csv")
+    df.to_csv(csv_path, index=False)
     export_skill_aliases()  # ensure aliases file exists for downstream
-    logger.info("Canonical jobs saved to %s (rows=%s sources=%s)", output_path, len(df), df["source"].value_counts().to_dict())
+    logger.info(
+        "Canonical jobs saved to %s and %s (rows=%s sources=%s)",
+        output_path,
+        csv_path,
+        len(df),
+        df["source"].value_counts().to_dict(),
+    )
     return output_path
 
 
