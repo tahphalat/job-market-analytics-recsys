@@ -4,8 +4,8 @@ from typing import List, Dict
 
 import pandas as pd
 
-from utils.common import ensure_parent, set_seed
-from utils.logging import get_logger
+from src.utils.common import ensure_parent, set_seed
+from src.utils.logging import get_logger
 
 logger = get_logger(__name__)
 
