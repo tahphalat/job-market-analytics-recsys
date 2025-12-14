@@ -44,13 +44,13 @@ export default function HomePage() {
                <h3 className="text-xl font-display text-primary mb-2 group-hover:text-accent transition-colors">Skill Graph Analysis</h3>
                <p className="text-secondary leading-relaxed">
                  We build a co-occurrence graph to understand which skills are frequently hired together. 
-                 This helps you plan your learning path (e.g. Python -> Spark -> Airflow).
+                 This helps you plan your learning path (e.g. Python → Spark → Airflow).
                </p>
              </div>
              <div className="p-6 rounded-xl border border-border bg-surface/20 group hover:border-highlight/40 transition-colors">
                <h3 className="text-xl font-display text-primary mb-2 group-hover:text-highlight transition-colors">Explainable Recommendations</h3>
                <p className="text-secondary leading-relaxed">
-                 Our TF-IDF model doesn't just give you a list. It explains <i>why</i> a job is a good match based on your profile keywords.
+                 Our TF-IDF model does not just give you a list. It explains <i>why</i> a job is a good match based on your profile keywords.
                </p>
              </div>
            </div>

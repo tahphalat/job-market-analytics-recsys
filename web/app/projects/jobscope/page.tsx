@@ -4,20 +4,15 @@
 import { useEffect, useState } from 'react';
 import { Container } from '../../../components/Container';
 import { Badge } from '../../../components/Badge';
-import { Button } from '../../../components/Button';
 import { ArtifactsGate } from '../../../src/components/ArtifactsGate';
 import {
   ArtifactMissingError,
-  loadDemoProfiles,
-  loadDemoRecs,
   loadKpiSummary,
   loadTopSkills,
   loadTopTitles,
   loadJobsLite
 } from '../../../src/lib/artifacts/fetchers';
 import { 
-    DemoProfile, 
-    DemoRecsByProfile, 
     KpiSummary, 
     CountRow,
     JobLite
@@ -27,10 +22,9 @@ import {
 import { SystemOverview } from './components/SystemOverview';
 import { MarketInsights } from './components/MarketInsights';
 import { JobBrowser } from './components/JobBrowser';
-import { RecommendationEngine } from './components/RecommendationEngine';
 import { RealTimeMonitor } from './components/RealTimeMonitor';
 
-type NavItem = 'System Overview' | 'Market Insights' | 'Job Browser' | 'Recommendation Engine' | 'Real-time Monitor';
+type NavItem = 'System Overview' | 'Market Insights' | 'Job Browser' | 'Real-time Monitor';
 
 export default function JobScopePage() {
   const [loading, setLoading] = useState(true);
@@ -41,8 +35,6 @@ export default function JobScopePage() {
   const [kpi, setKpi] = useState<KpiSummary | null>(null);
   const [topTitles, setTopTitles] = useState<CountRow[]>([]);
   const [topSkills, setTopSkills] = useState<CountRow[]>([]);
-  const [recs, setRecs] = useState<DemoRecsByProfile>({});
-  const [profiles, setProfiles] = useState<DemoProfile[]>([]);
   const [jobs, setJobs] = useState<JobLite[]>([]);
 
   useEffect(() => {
@@ -53,19 +45,15 @@ export default function JobScopePage() {
           loadKpiSummary(),
           loadTopTitles(),
           loadTopSkills(),
-          loadDemoRecs(),
-          loadDemoProfiles(),
           loadJobsLite()
         ]);
         if (!mounted) return;
 
-        const [kpiRes, titlesRes, skillsRes, recsRes, profilesRes, jobsRes] = results;
+        const [kpiRes, titlesRes, skillsRes, jobsRes] = results;
 
         if (kpiRes.status === 'fulfilled') setKpi(kpiRes.value);
         if (titlesRes.status === 'fulfilled') setTopTitles(titlesRes.value);
         if (skillsRes.status === 'fulfilled') setTopSkills(skillsRes.value);
-        if (recsRes.status === 'fulfilled') setRecs(recsRes.value);
-        if (profilesRes.status === 'fulfilled') setProfiles(profilesRes.value);
         if (jobsRes.status === 'fulfilled') setJobs(jobsRes.value);
         else console.warn("Could not load jobs_lite.csv");
 
@@ -85,7 +73,6 @@ export default function JobScopePage() {
     'System Overview',
     'Market Insights',
     'Job Browser', 
-    'Recommendation Engine',
     'Real-time Monitor'
   ];
 
@@ -142,10 +129,6 @@ export default function JobScopePage() {
 
             {activeNav === 'Job Browser' && (
                 <JobBrowser jobs={jobs} />
-            )}
-
-            {activeNav === 'Recommendation Engine' && (
-                <RecommendationEngine recs={recs} profiles={profiles} />
             )}
 
              {activeNav === 'Real-time Monitor' && (
