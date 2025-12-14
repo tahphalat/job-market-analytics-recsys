@@ -53,11 +53,12 @@ train:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.models.train_recommender --input data/processed/jobs_canonical.parquet --model_dir artifacts/recommender --top_k 10 --seed $(SEED)
 
 run_all:
-	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.run_all --input $(RAW_INPUT) --output $(OUTPUT_DIR) --seed $(SEED)
+	@if [ -z "$(KAGGLE_INPUT)" ] && [ "$(SKIP_EXTRACT)" != "1" ]; then echo "KAGGLE_INPUT is required unless SKIP_EXTRACT=1"; exit 1; fi
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.run_all $(if $(KAGGLE_INPUT),--kaggle_input $(KAGGLE_INPUT),) $(if $(KAGGLE_DATASET),--kaggle_dataset $(KAGGLE_DATASET),) $(if $(filter 1,$(SKIP_EXTRACT)),--skip_extract,) --seed $(SEED)
 
 smoke_test:
-	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.run_all --help
+	$(MAKE) run_all SKIP_EXTRACT=1
+	PYTHONPATH=$(PYTHONPATH) pytest -q
 
 export_web:
-	mkdir -p web
-	@if [ -d dsde/reports ]; then cp -R dsde/reports web/; fi
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.utils.export_to_web --web_public_dir web/public/artifacts
