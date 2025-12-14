@@ -1,0 +1,437 @@
+{
+  "Data Engineer": [
+    {
+      "job_id": "4266dc03b3131479d0902e9831edf60306bdcf4b",
+      "title": "Senior Data Engineer",
+      "company": "VideoAmp",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3903459205/?trk=jobs_biz_prem_srch",
+      "score": 0.49720149922733864,
+      "reasons": [
+        "snowflake",
+        "spark",
+        "airflow",
+        "data",
+        "python"
+      ]
+    },
+    {
+      "job_id": "585d3fdd7aecd72a6fb0ac14d84fb17f959320d0",
+      "title": "Snowflake Developer with AWS",
+      "company": "ApTask",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3903455858/?trk=jobs_biz_prem_srch",
+      "score": 0.47243651868280084,
+      "reasons": [
+        "snowflake",
+        "sql",
+        "aws",
+        "data",
+        "python"
+      ]
+    },
+    {
+      "job_id": "2447e7d3f9647743653aadde5f548ca1aa2331b6",
+      "title": "Snowflake Developer",
+      "company": "Cygnus Professionals Inc.",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3905880578/?trk=jobs_biz_prem_srch",
+      "score": 0.45965531879852106,
+      "reasons": [
+        "snowflake",
+        "aws",
+        "sql",
+        "data",
+        "pipelines"
+      ]
+    },
+    {
+      "job_id": "48a93cb7f1f2bd5f695545d7d3496a633e91d111",
+      "title": "Python Developer",
+      "company": "The Judge Group",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3904389579/?trk=jobs_biz_prem_srch",
+      "score": 0.4337253879488132,
+      "reasons": [
+        "spark",
+        "python",
+        "aws",
+        "cloud"
+      ]
+    },
+    {
+      "job_id": "4c8603d1cf8c263d20c0c595d2bcf64fb31ee1e9",
+      "title": "Sr Data Engineer with Kafka",
+      "company": "ZenithMinds Inc",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3742692445/?trk=jobs_biz_prem_srch",
+      "score": 0.43353351074053564,
+      "reasons": [
+        "kafka",
+        "snowflake",
+        "data",
+        "sql",
+        "aws"
+      ]
+    },
+    {
+      "job_id": "8f7a67fd1be91e93c1c621dfba2fa8a26b1c1c1a",
+      "title": "Snowflake Data Architect(looking for local profiles only at Illinois)",
+      "company": "IT America Inc",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3905206917/?trk=jobs_biz_prem_srch",
+      "score": 0.4216644319715575,
+      "reasons": [
+        "snowflake",
+        "data",
+        "airflow",
+        "kafka",
+        "cloud"
+      ]
+    },
+    {
+      "job_id": "026e5ab6efd4e93ab3763d5a667d6b72ef7e6d45",
+      "title": "Data Engineer",
+      "company": "TechDoQuest",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3888826255/?trk=jobs_biz_prem_srch",
+      "score": 0.41812946141438423,
+      "reasons": [
+        "sql",
+        "python",
+        "snowflake",
+        "data",
+        "pipelines"
+      ]
+    },
+    {
+      "job_id": "3d58c8b8a74357bc2fbc702eb253307f61470642",
+      "title": "Databricks Data Architect",
+      "company": "ALOIS Solutions",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3889757119/?trk=jobs_biz_prem_srch",
+      "score": 0.40034731558852293,
+      "reasons": [
+        "airflow",
+        "spark",
+        "pipelines",
+        "sql",
+        "data"
+      ]
+    },
+    {
+      "job_id": "a6cbe7fa78dd0c3397bd9000f7fa35270706f62d",
+      "title": "Snowflake Architect",
+      "company": "Themesoft Inc.",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3904935290/?trk=jobs_biz_prem_srch",
+      "score": 0.3831348416720763,
+      "reasons": [
+        "snowflake",
+        "data",
+        "cloud",
+        "pipelines"
+      ]
+    },
+    {
+      "job_id": "adad5434300a58552e8e1c0b82cf73af18c2c6d3",
+      "title": "Software Data Engineer - DPP",
+      "company": "TEKsystems",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3903823752/?trk=jobs_biz_prem_srch",
+      "score": 0.3819955517590539,
+      "reasons": [
+        "snowflake",
+        "aws",
+        "cloud",
+        "engineer",
+        "python"
+      ]
+    }
+  ],
+  "Data Analyst": [
+    {
+      "job_id": "d669f31a78685599815626f25d84d0a6432c1029",
+      "title": "Tableau Developer (Only on W2)",
+      "company": "ISITE TECHNOLOGIES",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3901465075/?trk=jobs_biz_prem_srch",
+      "score": 0.5229640371263589,
+      "reasons": [
+        "tableau",
+        "dashboards",
+        "analyst",
+        "reporting",
+        "data"
+      ]
+    },
+    {
+      "job_id": "b3adcfcacc84a404bfd4ade0f0b515196dac2aca",
+      "title": "Lead Data Analyst",
+      "company": "Marathon Health",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3905843043/?trk=jobs_biz_prem_srch",
+      "score": 0.5087938084638044,
+      "reasons": [
+        "tableau",
+        "sql",
+        "dashboards",
+        "analyst",
+        "data"
+      ]
+    },
+    {
+      "job_id": "da66acd76159532e712790f126ac552728666ad7",
+      "title": "Business Analyst (Tableau Specialist)",
+      "company": "Passerelle",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3905849490/?trk=jobs_biz_prem_srch",
+      "score": 0.484293869182204,
+      "reasons": [
+        "tableau",
+        "dashboards",
+        "data",
+        "business",
+        "analyst"
+      ]
+    },
+    {
+      "job_id": "ffbb6b40bc6ba89b0e9038231fb6dfebfbab467c",
+      "title": "Tableau Developer-Wichita, KS(Onsite&Need on our W2 Only)",
+      "company": "ISITE TECHNOLOGIES",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3901697200/?trk=jobs_biz_prem_srch",
+      "score": 0.48115435661329314,
+      "reasons": [
+        "tableau",
+        "dashboards",
+        "data",
+        "analyst",
+        "business"
+      ]
+    },
+    {
+      "job_id": "ad9b10dc938540f3123a849894ca864385e066d7",
+      "title": "Tableau Developer",
+      "company": "VDart",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3884434020/?trk=jobs_biz_prem_srch",
+      "score": 0.4738279149641829,
+      "reasons": [
+        "tableau",
+        "dashboards"
+      ]
+    },
+    {
+      "job_id": "fd35c111d34fed444d4264c35d62c85e5ff2001a",
+      "title": "Tableau Developer",
+      "company": "Zodiac Solutions, Inc",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3902833392/?trk=jobs_biz_prem_srch",
+      "score": 0.4691346055151016,
+      "reasons": [
+        "tableau",
+        "sql",
+        "data"
+      ]
+    },
+    {
+      "job_id": "34d36db82f5a3f2ae41f047a58f7b0754eae2255",
+      "title": "Tableau Developer",
+      "company": "TekJobs",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3901999871/?trk=jobs_biz_prem_srch",
+      "score": 0.46819648699918887,
+      "reasons": [
+        "tableau",
+        "sql",
+        "data"
+      ]
+    },
+    {
+      "job_id": "93b4799b526426f1f921b5630f4ca6733c4b8492",
+      "title": "Microsoft Full Stack Engineer",
+      "company": "Stellarwins Solutions",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3886897773/?trk=jobs_biz_prem_srch",
+      "score": 0.45712631393987196,
+      "reasons": [
+        "tableau",
+        "dashboards",
+        "data",
+        "reporting"
+      ]
+    },
+    {
+      "job_id": "11630a6c49ea91ace2f3b54af604a89bcaed3c89",
+      "title": "Tableau Developer",
+      "company": "KK Software Associates",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3899520609/?trk=jobs_biz_prem_srch",
+      "score": 0.4519790627496724,
+      "reasons": [
+        "tableau",
+        "dashboards",
+        "intelligence",
+        "data",
+        "business"
+      ]
+    },
+    {
+      "job_id": "d5869edba1bb8099ebd985b32ce4f7f708752719",
+      "title": "Tableau Consultant",
+      "company": "XeoMatrix",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3900963473/?trk=jobs_biz_prem_srch",
+      "score": 0.44583212867478095,
+      "reasons": [
+        "tableau",
+        "data",
+        "business"
+      ]
+    }
+  ],
+  "Data Scientist": [
+    {
+      "job_id": "c7622822cb19cde30bff07576a006d8bfb8b5eb5",
+      "title": "Machine Learning Engineer- 10+year exp*",
+      "company": "Q1 Technologies, Inc.",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3901394474/?trk=jobs_biz_prem_srch",
+      "score": 0.5064807126297349,
+      "reasons": [
+        "pandas",
+        "learning",
+        "nlp",
+        "machine",
+        "data"
+      ]
+    },
+    {
+      "job_id": "7bc5bdb37e75736be6ac4cbffa69e25803bff7ae",
+      "title": "Junior Data Scientist - Python /Modeling",
+      "company": "Expert Technical Solutions",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3887713726/?trk=jobs_biz_prem_srch",
+      "score": 0.4604123508006643,
+      "reasons": [
+        "scientist",
+        "learning",
+        "nlp",
+        "python",
+        "machine"
+      ]
+    },
+    {
+      "job_id": "badddfad30f64d5380031977d6ee9e6b60cf2865",
+      "title": "Data Scientist",
+      "company": "TEKsystems",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3885828275/?trk=jobs_biz_prem_srch",
+      "score": 0.4290449479134708,
+      "reasons": [
+        "nlp",
+        "learning",
+        "machine",
+        "scientist",
+        "data"
+      ]
+    },
+    {
+      "job_id": "36be9f5567f6c5fc894bedcc44f4eb7337e8bf62",
+      "title": "Machine Learning Engineer",
+      "company": "eduPhoria.ai",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3901959900/?trk=jobs_biz_prem_srch",
+      "score": 0.42646766914124873,
+      "reasons": [
+        "learning",
+        "machine",
+        "data"
+      ]
+    },
+    {
+      "job_id": "267edad96837e748ef5029400be5f90b6e913bb5",
+      "title": "Developer",
+      "company": "Tata Consultancy Services",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3884923055/?trk=jobs_biz_prem_srch",
+      "score": 0.421372700777882,
+      "reasons": [
+        "learning",
+        "machine",
+        "python",
+        "data"
+      ]
+    },
+    {
+      "job_id": "e47d2b4a2d4b9c4ed5526a54b98b2782edc6fc68",
+      "title": "Machine Learning Engineer/Python Developer",
+      "company": "Red Oak Technologies",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3902840888/?trk=jobs_biz_prem_srch",
+      "score": 0.4205592337811131,
+      "reasons": [
+        "learning",
+        "machine",
+        "python",
+        "data"
+      ]
+    },
+    {
+      "job_id": "7d0d417476cadff15d95069c0ad668b30f5de0db",
+      "title": "AI /Machine Learning Engineer / Architect",
+      "company": "Lorven Technologies Inc.",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3901937564/?trk=jobs_biz_prem_srch",
+      "score": 0.41762648058093055,
+      "reasons": [
+        "learning",
+        "machine",
+        "scientist",
+        "deep",
+        "data"
+      ]
+    },
+    {
+      "job_id": "27117d2b87965a3c5de7e2a4fb1f58d4529f0fb1",
+      "title": "Senior Machine Learning Engineer (Python, PySpark, SQL)",
+      "company": "Capital One",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3902781837/?trk=jobs_biz_prem_srch",
+      "score": 0.41695614352864147,
+      "reasons": [
+        "learning",
+        "machine",
+        "python"
+      ]
+    },
+    {
+      "job_id": "ba51044483327619efbbf452fdd59da84b20eec5",
+      "title": "Senior Machine Learning Engineer (Python, PySpark, SQL)",
+      "company": "Capital One",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3902780924/?trk=jobs_biz_prem_srch",
+      "score": 0.41695614352864147,
+      "reasons": [
+        "learning",
+        "machine",
+        "python"
+      ]
+    },
+    {
+      "job_id": "8bfc4f145500a2978848b2d5684f03a72c2ee1d6",
+      "title": "Data Scientist (Medical)",
+      "company": "PSRTEK",
+      "source": "kaggle",
+      "source_url": "https://www.linkedin.com/jobs/view/3901936390/?trk=jobs_biz_prem_srch",
+      "score": 0.4105862379736715,
+      "reasons": [
+        "nlp",
+        "scientist",
+        "python",
+        "data"
+      ]
+    }
+  ]
+}
