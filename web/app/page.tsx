@@ -1,111 +1,61 @@
 import Link from 'next/link';
+import { Hero } from '../components/Hero';
+import { BentoGrid, BentoItem } from '../components/BentoGrid';
 import { Container } from '../components/Container';
-import { SectionTitle } from '../components/SectionTitle';
-import { Card } from '../components/Card';
-import { Badge } from '../components/Badge';
-import { Button } from '../components/Button';
+import kpiSummary from '../public/artifacts/kpi_summary.json';
 
-const highlights = [
-  {
-    title: 'Overview in 30s',
-    copy: 'KPIs, Kaggle vs Remotive coverage, and where the volume sits.',
-    href: '/projects/jobscope'
-  },
-  {
-    title: 'Trends & Graphs',
-    copy: 'Top titles, emerging skills, and a co-occurrence network from real postings.',
-    href: '/projects/jobscope#trends'
-  },
-  {
-    title: 'Recommendation Demo',
-    copy: 'Data Engineer / Analyst / Scientist paths with reasons you can skim.',
-    href: '/demo'
-  }
-];
+const formatNumber = (num: number) => new Intl.NumberFormat('en-US').format(num);
 
 export default function HomePage() {
+  const kpi = kpiSummary as any;
+  const totalJobs = kpi?.total_jobs || 0;
+  const companies = kpi?.unique_companies || 0;
+  const kaggle = kpi?.sources?.kaggle || 0;
+  
   return (
-    <Container className="pb-12 pt-10 lg:pt-14">
-      <section className="mb-14 grid gap-8 rounded-3xl bg-gradient-to-br from-white/5 via-white/0 to-white/5 p-8 shadow-glow">
-        <div className="max-w-3xl space-y-4">
-          <Badge>JobScope MVP</Badge>
-          <h1 className="font-display text-4xl leading-tight sm:text-5xl">JobScope: สรุปตลาดงาน + แนะนำงานที่เหมาะกับคุณ</h1>
-          <p className="text-lg text-mist/80">
-            ตลาดงานเหมือนซูเปอร์มาร์เก็ตของเยอะ: ไม่รู้เลือกงานไหน, ไม่รู้ช่วงนี้อะไรมาแรง, ไม่รู้ควรอัปสกิลอะไรเพิ่ม. JobScope รวบ KPIs, เทรนด์, skill graph, และ demo
-            แนะนำงานให้ดูจบใน 30 วินาที.
-          </p>
-          <div className="flex flex-wrap items-center gap-3">
-            <Button href="/projects/jobscope">View JobScope Dashboard</Button>
-            <Button variant="ghost" href="/demo">
-              Demo in 2 minutes
-            </Button>
-            <span className="text-sm text-mist/60">Kaggle + Remotive | Skill graph | Recs</span>
-          </div>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-3">
-          {highlights.map((item) => (
-            <Card key={item.title} className="flex h-full flex-col justify-between transition hover:-translate-y-1 hover:border-accent/50 hover:shadow-glow">
-              <div className="space-y-2">
-                <p className="text-sm uppercase tracking-wide text-mist/70">{item.title}</p>
-                <p className="text-sm text-mist/90">{item.copy}</p>
-              </div>
-              <div className="mt-6 text-xs font-semibold text-accent">
-                <Link href={item.href}>Open</Link>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </section>
+    <main>
+      <Hero />
+      
+      <Container className="pb-24 space-y-12">
+        <section className="animate-fade-in-up" style={{ animationDelay: '2.2s' }}>
+          <h2 className="text-2xl font-display text-primary mb-6">Market Pulse</h2>
+          <BentoGrid>
+            <BentoItem title="Total Jobs Tracked" value={formatNumber(totalJobs)} subtitle="Across Kaggle & Secondary Sources" />
+            <BentoItem title="Unique Companies" value={formatNumber(companies)} subtitle="Hiring for Data roles" />
+            <BentoItem title="Sources" className="bg-surface/60">
+               <div className="flex flex-col gap-2 mt-2">
+                 <div className="flex justify-between text-sm">
+                   <span className="text-secondary">Kaggle (Primary)</span>
+                   <span className="text-primary font-mono">{formatNumber(kaggle)}</span>
+                 </div>
+                 <div className="flex justify-between text-sm">
+                   <span className="text-secondary">Kaggle (Secondary)</span>
+                   <span className="text-primary font-mono">{formatNumber(totalJobs - kaggle)}</span>
+                 </div>
+               </div>
+            </BentoItem>
+          </BentoGrid>
+        </section>
 
-      <section className="grid gap-6 rounded-3xl border border-white/5 bg-white/5 p-6 backdrop-blur lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <SectionTitle title="What this shows" subtitle="Minimal dashboard to answer where demand sits, what spikes, and how to respond." />
-          <div className="mt-4 grid gap-3 text-mist/90 sm:grid-cols-2">
-            <div className="rounded-xl border border-white/5 bg-white/5 px-4 py-3">
-              <p className="text-xs uppercase tracking-wide text-mist/60">A</p>
-              <p className="font-semibold">Overview</p>
-              <p className="text-sm text-mist/80">KPIs + Kaggle vs Remotive source mix.</p>
-            </div>
-            <div className="rounded-xl border border-white/5 bg-white/5 px-4 py-3">
-              <p className="text-xs uppercase tracking-wide text-mist/60">B</p>
-              <p className="font-semibold">Trends</p>
-              <p className="text-sm text-mist/80">Top titles & skills from artifacts.</p>
-            </div>
-            <div className="rounded-xl border border-white/5 bg-white/5 px-4 py-3">
-              <p className="text-xs uppercase tracking-wide text-mist/60">C</p>
-              <p className="font-semibold">Skill Graph</p>
-              <p className="text-sm text-mist/80">Skill pairs / co-occurrence network.</p>
-            </div>
-            <div className="rounded-xl border border-white/5 bg-white/5 px-4 py-3">
-              <p className="text-xs uppercase tracking-wide text-mist/60">D</p>
-              <p className="font-semibold">Recommendation demo</p>
-              <p className="text-sm text-mist/80">DE/DA/DS with reasons for every match.</p>
-            </div>
-          </div>
-        </div>
-        <Card className="h-full">
-          <div className="flex h-full flex-col justify-between rounded-2xl bg-gradient-to-br from-accent/20 via-ink to-highlight/10 p-[1px]">
-            <div className="h-full rounded-2xl bg-ink/80 p-5">
-              <h3 className="font-display text-xl">Why recruiters care</h3>
-              <ul className="mt-3 space-y-2 text-sm text-mist/90">
-                <li>Data Engineering: canonical schema + dedupe + provenance.</li>
-                <li>Data Analytics: KPI + dashboards + insights from artifacts.</li>
-                <li>Data Science: TF-IDF recommender + explainability.</li>
-                <li>Software: clean structure + docs + reproducibility.</li>
-              </ul>
-            </div>
-          </div>
-        </Card>
-      </section>
-
-      <section className="mt-8">
-        <Card className="flex flex-wrap items-start gap-4 text-sm text-mist/80">
-          <Badge>Data sources</Badge>
-          <p>
-            Kaggle job postings + Remotive API (attribution placeholder). All artifacts load client-side from <code className="text-accent">/public/artifacts</code>.
-          </p>
-        </Card>
-      </section>
-    </Container>
+        <section className="animate-fade-in-up" style={{ animationDelay: '2.4s' }}>
+           <h2 className="text-2xl font-display text-primary mb-6">Features</h2>
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+             <div className="p-6 rounded-xl border border-border bg-surface/20 group hover:border-accent/40 transition-colors">
+               <h3 className="text-xl font-display text-primary mb-2 group-hover:text-accent transition-colors">Skill Graph Analysis</h3>
+               <p className="text-secondary leading-relaxed">
+                 We build a co-occurrence graph to understand which skills are frequently hired together. 
+                 This helps you plan your learning path (e.g. Python -> Spark -> Airflow).
+               </p>
+             </div>
+             <div className="p-6 rounded-xl border border-border bg-surface/20 group hover:border-highlight/40 transition-colors">
+               <h3 className="text-xl font-display text-primary mb-2 group-hover:text-highlight transition-colors">Explainable Recommendations</h3>
+               <p className="text-secondary leading-relaxed">
+                 Our TF-IDF model doesn't just give you a list. It explains <i>why</i> a job is a good match based on your profile keywords.
+               </p>
+             </div>
+           </div>
+        </section>
+      </Container>
+    </main>
   );
 }

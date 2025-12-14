@@ -8,20 +8,37 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        ink: "#0f172a",
-        mist: "#e2e8f0",
-        cloud: "#f8fafc",
-        accent: "#0ea5e9",
-        accentSoft: "#38bdf8",
-        highlight: "#f59e0b",
-        card: "#0b1222"
+        background: "#050505", // Deepest black
+        surface: "#111111",    // Slightly lighter for cards
+        surfaceMuted: "#1a1a1a",
+        border: "#262626",     // Subtle borders
+        primary: "#ffffff",    // Stark white text
+        secondary: "#a1a1aa",  // Zinc-400 for muted text
+        muted: "#52525b",      // Zinc-600
+        accent: "#38bdf8",     // Sky-400 (Cyber blue accent)
+        highlight: "#f472b6",  // Pink-400 (Subtle highlight)
+        // Legacy support
+        ink: "#050505",
+        card: "#111111"
       },
       fontFamily: {
-        sans: ["var(--font-manrope)", "system-ui", "sans-serif"],
-        display: ["var(--font-space-grotesk)", "var(--font-manrope)", "sans-serif"]
+        sans: ["var(--font-inter)", "system-ui", "sans-serif"], // Clean Inter
+        mono: ["var(--font-fira-code)", "monospace"],
+        display: ["var(--font-space-grotesk)", "sans-serif"]
       },
-      boxShadow: {
-        glow: "0 10px 40px rgba(14, 165, 233, 0.25)"
+      animation: {
+        "fade-in-up": "fadeInUp 0.8s ease-out forwards",
+        "typewriter": "typewriter 2s steps(20) forwards"
+      },
+      keyframes: {
+        fadeInUp: {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" }
+        },
+        typewriter: {
+          "0%": { width: "0" },
+          "100%": { width: "100%" }
+        }
       }
     }
   },

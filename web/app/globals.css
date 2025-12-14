@@ -7,9 +7,8 @@
 }
 
 body {
-  background: radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.06), transparent 25%),
-    radial-gradient(circle at 80% 0%, rgba(245, 158, 11, 0.08), transparent 22%),
-    #0b1222;
+  background: #050505;
+  color: #ffffff;
   min-height: 100vh;
 }
 
@@ -33,10 +32,10 @@ a {
 
 @layer components {
   .card {
-    @apply glass rounded-2xl border border-slate-800/60 shadow-glow;
+    @apply border border-border bg-surface/50 backdrop-blur-md;
   }
 
   .pill {
-    @apply inline-flex items-center rounded-full bg-white/5 px-3 py-1 text-xs font-medium uppercase tracking-wide text-mist;
+    @apply inline-flex items-center rounded-full border border-border bg-surfaceMuted px-3 py-1 text-xs font-mono font-medium tracking-wide text-secondary;
   }
 }

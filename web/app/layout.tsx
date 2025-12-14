@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
-import { Manrope, Space_Grotesk } from 'next/font/google';
+import { Inter, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
 
-const manrope = Manrope({
+const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-manrope',
+  variable: '--font-inter',
   display: 'swap'
 });
 
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${manrope.variable} ${spaceGrotesk.variable} bg-ink text-cloud`}>
+      <body className={`${inter.variable} ${spaceGrotesk.variable} bg-background text-primary antialiased selection:bg-accent selection:text-black`}>
         <div className="relative min-h-screen">
           <div className="pointer-events-none fixed inset-0 opacity-60">
             <div className="grid-overlay absolute inset-0" />
