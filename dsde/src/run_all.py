@@ -2,17 +2,15 @@ import argparse
 from pathlib import Path
 from typing import Optional
 
-import argparse
-
-from config import ARTIFACTS_DIR, PROCESSED_DIR, SEED
-from extract.extract import extract
-from features.build_features import build_features
-from load.load import load
-from models.train_model import train
-from transform.transform import transform
-from utils.common import ensure_parent, set_seed
-from utils.logging import get_logger
-from viz.eda import run_eda
+from src.config import ARTIFACTS_DIR, PROCESSED_DIR, SEED
+from src.extract.extract import extract
+from src.features.build_features import build_features
+from src.load.load import load
+from src.models.train_model import train
+from src.transform.transform import transform
+from src.utils.common import ensure_parent, set_seed
+from src.utils.logging import get_logger
+from src.viz.eda import run_eda
 
 logger = get_logger(__name__)
 

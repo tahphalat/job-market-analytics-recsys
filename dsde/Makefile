@@ -1,40 +1,55 @@
 PYTHON ?= python
+PYTHONPATH ?= .
 SEED ?= 42
+SAMPLE_N ?= 2000
 
-RAW_INPUT ?= dsde/data/raw/input.csv
-EXTRACT_OUT ?= dsde/data/raw/raw_jobs.csv
-TRANSFORM_OUT ?= dsde/data/processed/clean_jobs.csv
-EDA_OUT ?= dsde/artifacts/graphs/eda_summary.json
-GRAPH_OUT ?= dsde/artifacts/figures/comp_value_by_category.html
-MODEL_OUT ?= dsde/artifacts/recommender/simple_model.pkl
-OUTPUT_DIR ?= dsde/data/processed
+KAGGLE_DATASET ?= arshkon/linkedin-job-postings
+KAGGLE_OUT_DIR ?= data/raw/kaggle
+KAGGLE_INPUT ?=
+KAGGLE_SCHEMA_PATH ?=
+
+REMOTIVE_OUT_DIR ?= data/raw/remotive
+REMOTIVE_API_URL ?= https://remotive.com/api/remote-jobs
+REMOTIVE_SCHEMA_PATH ?= $(REMOTIVE_OUT_DIR)/jobs_remotive_raw.parquet
+SCHEMA_REPORT ?= artifacts/schema_report.json
+
+RAW_INPUT ?= data/raw/input.csv
+EXTRACT_OUT ?= data/raw/raw_jobs.csv
+TRANSFORM_OUT ?= data/processed/clean_jobs.csv
+EDA_OUT ?= artifacts/graphs/eda_summary.json
+GRAPH_OUT ?= artifacts/figures/comp_value_by_category.html
+MODEL_OUT ?= artifacts/recommender/simple_model.pkl
+OUTPUT_DIR ?= data/processed
 
 .PHONY: setup extract transform eda graph train run_all smoke_test export_web
 
 setup:
 	$(PYTHON) -m pip install --upgrade pip
-	$(PYTHON) -m pip install -r dsde/requirements.txt
+	$(PYTHON) -m pip install -r requirements.txt
 
 extract:
-	$(PYTHON) dsde/src/extract/extract.py --input $(RAW_INPUT) --output $(EXTRACT_OUT) --seed $(SEED)
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.extract.fetch_kagglehub --dataset $(KAGGLE_DATASET) --out_dir $(KAGGLE_OUT_DIR) --seed $(SEED)
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.extract.ingest_kaggle $(if $(KAGGLE_INPUT),--input_path $(KAGGLE_INPUT),) --out_dir $(KAGGLE_OUT_DIR) --sample_n $(SAMPLE_N) --seed $(SEED)
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.extract.fetch_remotive --api_url $(REMOTIVE_API_URL) --out_dir $(REMOTIVE_OUT_DIR) --sample_n $(SAMPLE_N) --seed $(SEED)
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.utils.schema_report $(if $(KAGGLE_SCHEMA_PATH),--kaggle-path $(KAGGLE_SCHEMA_PATH),) --remotive-path $(REMOTIVE_SCHEMA_PATH) --output $(SCHEMA_REPORT) --seed $(SEED)
 
 transform:
-	$(PYTHON) dsde/src/transform/transform.py --input $(EXTRACT_OUT) --output $(TRANSFORM_OUT) --seed $(SEED)
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.transform.transform --input $(EXTRACT_OUT) --output $(TRANSFORM_OUT) --seed $(SEED)
 
 eda:
-	$(PYTHON) dsde/src/viz/eda.py --input $(TRANSFORM_OUT) --output $(EDA_OUT) --seed $(SEED)
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.viz.eda --input $(TRANSFORM_OUT) --output $(EDA_OUT) --seed $(SEED)
 
 graph:
-	$(PYTHON) dsde/src/viz/eda.py --input $(TRANSFORM_OUT) --output $(EDA_OUT) --figure $(GRAPH_OUT) --seed $(SEED)
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.viz.eda --input $(TRANSFORM_OUT) --output $(EDA_OUT) --figure $(GRAPH_OUT) --seed $(SEED)
 
 train:
-	$(PYTHON) dsde/src/models/train_model.py --input $(TRANSFORM_OUT) --output $(MODEL_OUT) --seed $(SEED)
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.models.train_model --input $(TRANSFORM_OUT) --output $(MODEL_OUT) --seed $(SEED)
 
 run_all:
-	$(PYTHON) dsde/src/run_all.py --input $(RAW_INPUT) --output $(OUTPUT_DIR) --seed $(SEED)
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.run_all --input $(RAW_INPUT) --output $(OUTPUT_DIR) --seed $(SEED)
 
 smoke_test:
-	$(PYTHON) dsde/src/run_all.py --help
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m src.run_all --help
 
 export_web:
 	mkdir -p web

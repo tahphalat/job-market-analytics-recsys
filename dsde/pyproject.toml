@@ -17,4 +17,7 @@ dependencies = [
     "sqlalchemy",
     "psycopg2-binary",
     "pydantic",
+    "requests",
+    "kaggle",
+    "kagglehub",
 ]
