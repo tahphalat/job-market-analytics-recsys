@@ -6,6 +6,7 @@ import {
   CountRow,
   DemoProfile,
   DemoRecsByProfile,
+  JobLite,
   KpiSummary,
   SkillGraph,
   SourceCount
@@ -108,4 +109,18 @@ export async function loadSourceCounts(): Promise<SourceCount[]> {
       count: Number(row.count || 0)
     }))
     .filter((row) => !!row.source);
+}
+
+export async function loadJobsLite(): Promise<JobLite[]> {
+  const rows = await fetchCsv('jobs_lite.csv');
+  return rows.map((row) => ({
+    title: row.title,
+    company: row.company,
+    location_text: row.location_text,
+    skills_display: row.skills_display,
+    published_at: row.published_at,
+    salary_min: row.salary_min ? Number(row.salary_min) : undefined,
+    salary_max: row.salary_max ? Number(row.salary_max) : undefined,
+    source: row.source
+  }));
 }

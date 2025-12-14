@@ -56,3 +56,14 @@ export type SkillGraph = {
 export type ArtifactsIndex = {
   files?: string[];
 };
+
+export type JobLite = {
+  title: string;
+  company: string;
+  location_text: string;
+  skills_display: string;
+  published_at: string;
+  salary_min?: number;
+  salary_max?: number;
+  source: string;
+};

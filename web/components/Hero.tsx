@@ -18,9 +18,7 @@ export const Hero = () => {
           <Link href="/projects/jobscope" className="text-sm font-semibold text-primary hover:text-accent transition-colors">
             View Dashboard &rarr;
           </Link>
-          <Link href="/demo" className="text-sm font-semibold text-muted hover:text-primary transition-colors">
-            Explainable AI &rarr;
-          </Link>
+          {/* Demo temporarily disabled */}
         </div>
       </div>
     </Container>

@@ -1,10 +1,8 @@
+
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { ResponsiveContainer, BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
+import { useEffect, useState } from 'react';
 import { Container } from '../../../components/Container';
-import { SectionTitle } from '../../../components/SectionTitle';
-import { Card } from '../../../components/Card';
 import { Badge } from '../../../components/Badge';
 import { Button } from '../../../components/Button';
 import { ArtifactsGate } from '../../../src/components/ArtifactsGate';
@@ -13,407 +11,153 @@ import {
   loadDemoProfiles,
   loadDemoRecs,
   loadKpiSummary,
-  loadSkillGraph,
-  loadSourceCounts,
   loadTopSkills,
-  loadTopTitles
+  loadTopTitles,
+  loadJobsLite
 } from '../../../src/lib/artifacts/fetchers';
-import { DemoProfile, DemoRec, KpiSummary, SkillGraph, SkillGraphEdge, SkillGraphNode, SourceCount } from '../../../src/lib/artifacts/types';
+import { 
+    DemoProfile, 
+    DemoRecsByProfile, 
+    KpiSummary, 
+    CountRow,
+    JobLite
+} from '../../../src/lib/artifacts/types';
 
-type TrendDatum = { name: string; count: number };
+// Components
+import { SystemOverview } from './components/SystemOverview';
+import { MarketInsights } from './components/MarketInsights';
+import { JobBrowser } from './components/JobBrowser';
+import { RecommendationEngine } from './components/RecommendationEngine';
+import { RealTimeMonitor } from './components/RealTimeMonitor';
 
-function numberWithCommas(num?: number) {
-  if (num === undefined || Number.isNaN(num)) return '—';
-  return num.toLocaleString('en-US');
-}
-
-function percent(part: number, whole: number) {
-  if (!whole) return '0%';
-  const pct = (part / whole) * 100;
-  if (pct === 0) return '0%';
-  if (pct < 0.1) return '<0.1%';
-  if (pct < 1) return `${pct.toFixed(1)}%`;
-  return `${Math.round(pct)}%`;
-}
-
-function SoWhat({ kpi }: { kpi: KpiSummary | null }) {
-  if (!kpi) return null;
-  const kaggle = kpi.sources?.kaggle ?? 0;
-  const remotive = kpi.sources?.remotive ?? 0;
-  const total = kaggle + remotive || kpi.total_jobs;
-  return (
-    <p className="text-sm text-mist/80">
-      So what: We scanned {numberWithCommas(total)} postings across {numberWithCommas(kpi.unique_companies)} companies. Kaggle dominates ({percent(kaggle, total)}), Remotive adds remote
-      flavor ({percent(remotive, total)}). Use this mix to benchmark reach and bias.
-    </p>
-  );
-}
-
-function TrendChart({ title, data }: { title: string; data: TrendDatum[] }) {
-  if (!data || data.length === 0) {
-    return (
-      <div className="rounded-2xl border border-white/5 bg-ink/60 p-4">
-        <p className="text-sm text-mist/70">{title}</p>
-        <p className="mt-3 text-sm text-mist/70">No data available.</p>
-      </div>
-    );
-  }
-  const sliced = data.slice(0, 10);
-  return (
-    <div className="rounded-2xl border border-white/5 bg-ink/60 p-4">
-      <p className="text-sm text-mist/70">{title}</p>
-      <div className="mt-3 h-64">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={sliced} margin={{ left: -20 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-            <XAxis dataKey="name" tick={{ fill: '#cbd5e1', fontSize: 11 }} interval={0} angle={-20} textAnchor="end" height={60} />
-            <YAxis tick={{ fill: '#cbd5e1', fontSize: 11 }} />
-            <Tooltip contentStyle={{ background: '#0b1222', border: '1px solid #1f2937', color: '#e2e8f0' }} />
-            <Bar dataKey="count" fill="url(#accentGradient)" radius={[6, 6, 0, 0]} />
-            <defs>
-              <linearGradient id="accentGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#38bdf8" />
-                <stop offset="100%" stopColor="#0ea5e9" />
-              </linearGradient>
-            </defs>
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-    </div>
-  );
-}
-
-function SkillGraphTable({ graph }: { graph: SkillGraph | null }) {
-  if (!graph) {
-    return <p className="text-sm text-mist/70">Skill graph not available.</p>;
-  }
-  const edges: SkillGraphEdge[] = (graph.edges || []).filter((e) => e.source && e.target && e.weight !== undefined);
-  const nodes: SkillGraphNode[] = (graph.nodes || []).filter((n) => n.label);
-  const hasEdges = edges.length > 0;
-  const edgeRows = edges.sort((a, b) => (b.weight || 0) - (a.weight || 0)).slice(0, 20);
-  const nodeRows = nodes.sort((a, b) => (b.count || 0) - (a.count || 0)).slice(0, 20);
-
-  return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full text-sm">
-        <thead className="text-mist/70">
-          <tr>
-            <th className="py-2 pr-4 text-left">{hasEdges ? 'Skill A' : 'Skill'}</th>
-            <th className="py-2 pr-4 text-left">{hasEdges ? 'Skill B' : 'Mentions'}</th>
-            <th className="py-2 text-left">{hasEdges ? 'Co-occur count' : 'Count'}</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-white/5 text-mist/90">
-          {hasEdges
-            ? edgeRows.map((row, idx) => (
-                <tr key={`${row.source}-${row.target}-${idx}`}>
-                  <td className="py-2 pr-4">{row.source}</td>
-                  <td className="py-2 pr-4">{row.target}</td>
-                  <td className="py-2">{row.weight ?? '—'}</td>
-                </tr>
-              ))
-            : nodeRows.map((row, idx) => (
-                <tr key={`${row.label}-${idx}`}>
-                  <td className="py-2 pr-4">{row.label}</td>
-                  <td className="py-2 pr-4">{row.count ?? '—'}</td>
-                  <td className="py-2">—</td>
-                </tr>
-              ))}
-        </tbody>
-      </table>
-      {!hasEdges ? <p className="mt-3 text-sm text-mist/70">No edge pairs found; showing top nodes instead.</p> : null}
-    </div>
-  );
-}
-
-function Reasons({ reasons }: { reasons: string[] }) {
-  if (!reasons || reasons.length === 0) return null;
-  return (
-    <div className="mt-2 flex flex-wrap gap-2">
-      {reasons.map((reason) => (
-        <span key={reason} className="rounded-full bg-white/5 px-2 py-1 text-xs text-mist/80">
-          {reason}
-        </span>
-      ))}
-    </div>
-  );
-}
+type NavItem = 'System Overview' | 'Market Insights' | 'Job Browser' | 'Recommendation Engine' | 'Real-time Monitor';
 
 export default function JobScopePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeNav, setActiveNav] = useState<NavItem>('System Overview');
+
+  // Data State
   const [kpi, setKpi] = useState<KpiSummary | null>(null);
-  const [topTitles, setTopTitles] = useState<TrendDatum[]>([]);
-  const [topSkills, setTopSkills] = useState<TrendDatum[]>([]);
-  const [graph, setGraph] = useState<SkillGraph | null>(null);
-  const [sourceCounts, setSourceCounts] = useState<SourceCount[]>([]);
-  const [recs, setRecs] = useState<Record<string, DemoRec[]>>({});
+  const [topTitles, setTopTitles] = useState<CountRow[]>([]);
+  const [topSkills, setTopSkills] = useState<CountRow[]>([]);
+  const [recs, setRecs] = useState<DemoRecsByProfile>({});
   const [profiles, setProfiles] = useState<DemoProfile[]>([]);
-  const [selectedProfile, setSelectedProfile] = useState<string>('');
+  const [jobs, setJobs] = useState<JobLite[]>([]);
 
   useEffect(() => {
     let mounted = true;
     async function loadAll() {
-      let firstError: string | null = null;
       try {
         const results = await Promise.allSettled([
           loadKpiSummary(),
           loadTopTitles(),
           loadTopSkills(),
-          loadSkillGraph(),
           loadDemoRecs(),
           loadDemoProfiles(),
-          loadSourceCounts()
+          loadJobsLite()
         ]);
         if (!mounted) return;
 
-        const [kpiRes, titlesRes, skillsRes, graphRes, recsRes, profilesRes, sourceRes] = results;
+        const [kpiRes, titlesRes, skillsRes, recsRes, profilesRes, jobsRes] = results;
 
         if (kpiRes.status === 'fulfilled') setKpi(kpiRes.value);
-        else if (kpiRes.reason) firstError = 'Missing KPI summary.';
-
-        if (titlesRes.status === 'fulfilled') setTopTitles(titlesRes.value.map((t) => ({ name: t.value, count: t.count })));
-        if (skillsRes.status === 'fulfilled') setTopSkills(skillsRes.value.map((s) => ({ name: s.value, count: s.count })));
-        if (graphRes.status === 'fulfilled') setGraph(graphRes.value);
-        if (sourceRes.status === 'fulfilled') setSourceCounts(sourceRes.value);
-
+        if (titlesRes.status === 'fulfilled') setTopTitles(titlesRes.value);
+        if (skillsRes.status === 'fulfilled') setTopSkills(skillsRes.value);
         if (recsRes.status === 'fulfilled') setRecs(recsRes.value);
         if (profilesRes.status === 'fulfilled') setProfiles(profilesRes.value);
+        if (jobsRes.status === 'fulfilled') setJobs(jobsRes.value);
+        else console.warn("Could not load jobs_lite.csv");
 
-        const profileName =
-          (profilesRes.status === 'fulfilled' && profilesRes.value?.[0]?.name) ||
-          (recsRes.status === 'fulfilled' && Object.keys(recsRes.value)[0]) ||
-          '';
-        setSelectedProfile(profileName);
-
-        if (!firstError) setError(null);
+        setError(null);
       } catch (err) {
-        const message = err instanceof ArtifactMissingError ? 'Artifacts missing. Run: make run_all && make export_web' : 'Failed to load artifacts.';
-        if (mounted) {
-          setError(message);
-        }
+        const message = err instanceof ArtifactMissingError ? 'Artifacts missing. Run make export_web' : 'Failed to load artifacts.';
+        if (mounted) setError(message);
       } finally {
         if (mounted) setLoading(false);
-        if (mounted && firstError) setError(firstError);
       }
     }
     loadAll();
-    return () => {
-      mounted = false;
-    };
+    return () => { mounted = false; };
   }, []);
 
-  const selectedRecs = useMemo(() => {
-    if (!selectedProfile) return [];
-    return recs[selectedProfile] ? recs[selectedProfile].slice(0, 10) : [];
-  }, [recs, selectedProfile]);
-
-  const insights = useMemo(() => {
-    const bullets: string[] = [];
-    if (topTitles.length > 0) {
-      bullets.push(`ชื่อตำแหน่งที่พบบ่อยสุด: ${topTitles[0].name} (${numberWithCommas(topTitles[0].count)} ครั้ง)`);
-    }
-    if (topSkills.length > 0) {
-      bullets.push(`สกิลเด่น: ${topSkills[0].name}`);
-    } else {
-      bullets.push('ไฟล์ top_skills.csv ว่าง — รัน make run_all && make export_web เพื่ออัปเดต');
-    }
-    const kaggleCount = kpi?.sources?.kaggle || sourceCounts.find((s) => s.source === 'kaggle')?.count || 0;
-    const remotiveCount = kpi?.sources?.remotive || sourceCounts.find((s) => s.source === 'remotive')?.count || 0;
-    const total = kaggleCount + remotiveCount;
-    if (total > 0) {
-      bullets.push(`สัดส่วนแหล่งข้อมูล: Kaggle ${percent(kaggleCount, total)}, Remotive ${percent(remotiveCount, total)}`);
-    }
-    if (kpi?.top_locations && kpi.top_locations.length > 0) {
-      const topLoc = kpi.top_locations[0];
-      bullets.push(`ทำเลพบบ่อย: ${topLoc.location_text} (${numberWithCommas(topLoc.count)})`);
-    }
-    if (graph && graph.nodes?.length) {
-      const dense = [...graph.nodes].sort((a, b) => (b.count || 0) - (a.count || 0))[0];
-      if (dense?.label) bullets.push(`เครือข่ายสกิล: โหนดเด่น = ${dense.label}`);
-    }
-    return bullets.slice(0, 6);
-  }, [topTitles, topSkills, kpi, sourceCounts, graph]);
-
-  const kaggleCount = kpi?.sources?.kaggle || sourceCounts.find((s) => s.source === 'kaggle')?.count || 0;
-  const remotiveCount = kpi?.sources?.remotive || sourceCounts.find((s) => s.source === 'remotive')?.count || 0;
-  const totalSources = kaggleCount + remotiveCount || 1;
-
-  const profileBlurb = profiles.find((p) => p.name === selectedProfile)?.profile || selectedProfile;
+  const navItems: NavItem[] = [
+    'System Overview',
+    'Market Insights',
+    'Job Browser', 
+    'Recommendation Engine',
+    'Real-time Monitor'
+  ];
 
   return (
     <ArtifactsGate>
-      <Container className="pb-16 pt-10 lg:pt-14">
-        <div className="grid gap-6">
-          <Card>
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="space-y-3">
-                <Badge>Case Study</Badge>
-                <h1 className="font-display text-4xl leading-tight sm:text-5xl">JobScope: job market signals in 30 seconds</h1>
-                <p className="max-w-3xl text-mist/80">
-                  Problem: ซูเปอร์มาร์เก็ตงานของเยอะ — ไม่รู้เลือกงานไหน, ไม่รู้ช่วงนี้อะไรมาแรง, ไม่รู้ควรอัปสกิลอะไรเพิ่ม. Project goal: สรุปตลาด + แนะนำงาน + เหตุผลที่ match.
-                </p>
-                <div className="flex flex-wrap items-center gap-3">
-                  <Button href="/demo">View demo</Button>
-                  <Button variant="ghost" href="/about">
-                    About this build
-                  </Button>
-                </div>
-                <div className="text-sm text-mist/70">
-                  Data sources: Kaggle job postings + Remotive API (
-                  <a href="https://remotive.com" target="_blank" rel="noreferrer" className="text-accent underline">
-                    remotive.com
-                  </a>
-                  ).
-                </div>
-              </div>
-              <pre className="w-full max-w-sm rounded-2xl border border-white/10 bg-ink/80 p-4 text-xs text-mist/80">
-{`[Kaggle jobs]  [Remotive API]
-      \\          /
-   canonical schema + dedupe
-           |
-     analytics tables
-           |
-  KPIs | trends | skill graph
-           |
-   TF-IDF recommender
-           |
-      web artifacts`}
-              </pre>
+      <Container className="pb-16 pt-10 lg:pt-14 font-sans">
+         {/* Header */}
+        <div className="mb-12">
+            <div className="flex flex-wrap items-center gap-4 mb-4">
+                <Badge>Internal Tool</Badge>
+                <div className="h-px bg-white/10 flex-grow"></div>
+                <div className="text-xs font-mono text-mist/50">v2.0.0-beta</div>
             </div>
-          </Card>
-
-          <Card>
-            <SectionTitle eyebrow="Section A" title="Overview (KPI + sources)" subtitle="Totals, companies, and source mix live from kpi_summary.json." />
-            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="rounded-2xl border border-white/5 bg-white/5 p-4">
-                <p className="text-sm text-mist/70">Total jobs</p>
-                <p className="mt-2 text-2xl font-semibold text-cloud">{loading ? 'Loading…' : numberWithCommas(kpi?.total_jobs)}</p>
-              </div>
-              <div className="rounded-2xl border border-white/5 bg-white/5 p-4">
-                <p className="text-sm text-mist/70">Unique companies</p>
-                <p className="mt-2 text-2xl font-semibold text-cloud">{loading ? 'Loading…' : numberWithCommas(kpi?.unique_companies)}</p>
-              </div>
-              <div className="rounded-2xl border border-white/5 bg-white/5 p-4">
-                <p className="text-sm text-mist/70">Kaggle share</p>
-                <p className="mt-2 text-2xl font-semibold text-cloud">
-                  {loading ? 'Loading…' : percent(kpi?.sources?.kaggle || 0, (kpi?.sources?.kaggle || 0) + (kpi?.sources?.remotive || 0))}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-white/5 bg-white/5 p-4">
-                <p className="text-sm text-mist/70">Remotive share</p>
-                <p className="mt-2 text-2xl font-semibold text-cloud">
-                  {loading ? 'Loading…' : percent(kpi?.sources?.remotive || 0, (kpi?.sources?.kaggle || 0) + (kpi?.sources?.remotive || 0))}
-                </p>
-              </div>
-            </div>
-            <div className="mt-4">
-              {error ? <p className="text-sm text-red-300">{error}</p> : <SoWhat kpi={kpi} />}
-            </div>
-          </Card>
-
-          <Card>
-            <SectionTitle eyebrow="Section B" title="Trends" subtitle="Top titles and skills pulled from CSV artifacts." />
-            <div className="mt-4 grid gap-4 lg:grid-cols-2">
-              <TrendChart title="Top titles" data={topTitles} />
-              <TrendChart title="Top skills" data={topSkills} />
-            </div>
-          </Card>
-
-          <Card>
-            <SectionTitle eyebrow="Section C" title="Skill Graph" subtitle="Table fallback showing strongest skill pairs from skill_graph.json." />
-            <SkillGraphTable graph={graph} />
-          </Card>
-
-          <Card>
-            <SectionTitle eyebrow="Insights" title="สรุปเร็ว" subtitle="ดึงจาก artifacts แบบอัตโนมัติ" />
-            {insights.length > 0 ? (
-              <ul className="mt-3 list-disc space-y-2 pl-5 text-mist/80">
-                {insights.map((item, idx) => (
-                  <li key={idx}>{item}</li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-sm text-mist/70">กำลังโหลด insights...</p>
-            )}
-          </Card>
-
-          <Card>
-            <SectionTitle eyebrow="Kaggle vs Remotive" title="ภาพรวม vs มุม remote" subtitle="ใช้ source_counts.csv หรือ kpi_summary.json" />
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-2xl border border-white/5 bg-ink/60 p-4">
-                <p className="text-sm font-semibold text-cloud">Kaggle (snapshot)</p>
-                <p className="text-sm text-mist/70">ภาพรวมกว้างของตลาด ณ เวลานั้น</p>
-                <p className="mt-2 text-lg font-semibold text-cloud">
-                  {numberWithCommas(kaggleCount)} jobs · {percent(kaggleCount, totalSources)}
-                </p>
-                <ul className="mt-2 list-disc space-y-1 pl-4 text-sm text-mist/80">
-                  <li>เหมาะกับการวัดความต้องการรวม</li>
-                  <li>แต่มี bias จากช่วงเวลาที่ดึง (snapshot)</li>
-                </ul>
-              </div>
-              <div className="rounded-2xl border border-white/5 bg-ink/60 p-4">
-                <p className="text-sm font-semibold text-cloud">Remotive (remote)</p>
-                <p className="text-sm text-mist/70">มุมมอง remote jobs ล่าสุด</p>
-                <p className="mt-2 text-lg font-semibold text-cloud">
-                  {numberWithCommas(remotiveCount)} jobs · {percent(remotiveCount, totalSources)}
-                </p>
-                <ul className="mt-2 list-disc space-y-1 pl-4 text-sm text-mist/80">
-                  <li>โฟกัส remote-friendly roles</li>
-                  <li>ปริมาณน้อยกว่าแต่ชี้เทรนด์ remote</li>
-                </ul>
-              </div>
-            </div>
-          </Card>
-
-          <Card>
-            <SectionTitle eyebrow="Section D" title="Recommendation demo" subtitle="Dropdown selects profile; shows top 10 jobs with reasons." />
-            <div className="flex flex-wrap items-center gap-3">
-              <label className="text-sm text-mist/70">Profile</label>
-              <select
-                value={selectedProfile}
-                onChange={(e) => setSelectedProfile(e.target.value)}
-                className="rounded-lg border border-white/10 bg-ink/80 px-3 py-2 text-sm text-cloud"
-              >
-                {profiles.map((p) => (
-                  <option key={p.name} value={p.name}>
-                    {p.name}
-                  </option>
-                ))}
-                {profiles.length === 0 &&
-                  Object.keys(recs).map((name) => (
-                    <option key={name} value={name}>
-                      {name}
-                    </option>
-                  ))}
-              </select>
-              {profileBlurb ? <span className="text-sm text-mist/70">Profile: {profileBlurb}</span> : null}
-            </div>
-            <div className="mt-4 space-y-3">
-              {selectedRecs.length === 0 && !loading && <p className="text-sm text-mist/70">No recommendations found.</p>}
-              {selectedRecs.map((rec) => (
-                <div key={rec.job_id} className="rounded-2xl border border-white/5 bg-ink/60 p-4">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <p className="text-cloud font-semibold">{rec.title}</p>
-                      <p className="text-sm text-mist/70">
-                        {rec.company} · {rec.source}
-                      </p>
-                    </div>
-                    <div className="text-sm text-accent font-semibold">{rec.score.toFixed(3)}</div>
-                  </div>
-                  {rec.source_url ? (
-                    <a href={rec.source_url} target="_blank" rel="noreferrer" className="text-xs text-accent underline">
-                      Open listing
-                    </a>
-                  ) : null}
-                  <p className="mt-2 text-xs text-mist/70">reasons = คำ/สกิลที่ match</p>
-                  <Reasons reasons={rec.reasons} />
-                </div>
-              ))}
-            </div>
-          </Card>
+            <h1 className="font-display text-5xl sm:text-6xl font-bold tracking-tight text-white mb-6">
+                JobScope <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-highlight">Analytics</span>
+            </h1>
+            <p className="max-w-2xl text-lg text-mist/80 leading-relaxed">
+                Comprehensive market intelligence platform for Data Engineering careers. 
+                Analyzing <span className="text-white font-semibold">{loading ? '...' : kpi?.total_jobs.toLocaleString()}</span> listings to decode skills, salaries, and trends.
+            </p>
         </div>
+
+        {/* Navigation */}
+        <div className="sticky top-4 z-40 mb-8 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
+            <div className="flex sm:flex-wrap gap-2 p-1 bg-surface/80 backdrop-blur-md border border-white/5 rounded-xl w-max sm:w-auto">
+                {navItems.map(item => (
+                    <button
+                        key={item}
+                        onClick={() => setActiveNav(item)}
+                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+                            activeNav === item 
+                            ? 'bg-primary text-black shadow-lg shadow-white/10' 
+                            : 'text-mist/60 hover:text-white hover:bg-white/5'
+                        }`}
+                    >
+                        {item}
+                    </button>
+                ))}
+            </div>
+        </div>
+
+        {/* Main Content Area */}
+        <div className="min-h-[500px] animate-fade-in-up">
+            {activeNav === 'System Overview' && (
+                <SystemOverview kpi={kpi} />
+            )}
+            
+            {activeNav === 'Market Insights' && (
+                <MarketInsights 
+                    topTitles={topTitles.map(t => ({ name: t.value, count: t.count }))} 
+                    topSkills={topSkills.map(s => ({ name: s.value, count: s.count }))} 
+                />
+            )}
+
+            {activeNav === 'Job Browser' && (
+                <JobBrowser jobs={jobs} />
+            )}
+
+            {activeNav === 'Recommendation Engine' && (
+                <RecommendationEngine recs={recs} profiles={profiles} />
+            )}
+
+             {activeNav === 'Real-time Monitor' && (
+                <RealTimeMonitor />
+            )}
+        </div>
+
+        {/* Footer info */}
+        <div className="mt-16 pt-8 border-t border-white/5 text-center text-xs text-mist/40 font-mono">
+            JobScope Analytics Platform • Built with Next.js, Tailwind, & Python
+        </div>
+
       </Container>
     </ArtifactsGate>
   );

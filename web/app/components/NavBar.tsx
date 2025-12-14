@@ -7,7 +7,6 @@ const links = [
   { href: '/', label: 'Home' },
   { href: '/projects/jobscope', label: 'JobScope' },
   { href: '/about', label: 'About' },
-  { href: '/demo', label: 'Demo' },
   { href: '/contact', label: 'Contact' }
 ];
 
@@ -32,7 +31,7 @@ export default function NavBar() {
           </div>
           <div className="leading-tight">
             <div className="font-display text-xl">JobScope</div>
-            <p className="text-xs text-mist/80">30-second job story</p>
+            {/* <p className="text-xs text-mist/80">30-second job story</p> */}
           </div>
         </Link>
         <nav className="flex items-center gap-2">
