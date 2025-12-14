@@ -29,6 +29,16 @@ export default function DemoPage() {
           <SectionTitle eyebrow="Recommendations" title="Jobs + reasons" subtitle="Recommendations will render below with reasons once wired." />
           <div className="mt-3 h-48 rounded-xl border border-white/5 bg-ink/60" />
         </Card>
+        <Card>
+          <SectionTitle eyebrow="Demo in 2 minutes" title="Checklist" subtitle="Follow these steps for a smooth run." />
+          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-mist/80">
+            <li>Run DSDE pipeline: <code className="text-accent">make run_all KAGGLE_INPUT=... && make export_web</code>.</li>
+            <li>Open <Link href="/projects/jobscope" className="text-accent underline">/projects/jobscope</Link> to load artifacts.</li>
+            <li>Walk through sections: Overview → Trends → Skill Graph → Recs.</li>
+            <li>Call out Kaggle = ภาพรวมกว้าง (snapshot), Remotive = มุม remote jobs (with attribution).</li>
+          </ol>
+          <p className="mt-3 text-sm text-mist/70">Artifacts not found? Run export_web again and refresh.</p>
+        </Card>
       </div>
     </Container>
   );

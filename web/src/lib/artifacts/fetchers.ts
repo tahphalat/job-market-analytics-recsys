@@ -50,7 +50,7 @@ export async function fetchCsv(path: string): Promise<Record<string, string>[]> 
   const res = await fetch(url, { cache: 'no-store' });
   await ensureOk(res, path);
   const text = await res.text();
-  const parsed = Papa.parse<Record<string, string>>(text, {
+  const parsed = Papa.parse(text, {
     header: true,
     skipEmptyLines: true
   });

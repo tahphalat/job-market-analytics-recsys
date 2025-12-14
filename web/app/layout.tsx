@@ -17,8 +17,14 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: 'JobScope | Job Market Signals',
-  description: 'Kaggle + Remotive job market signals, skill graph, and recommender demo — built in a day.'
+  title: 'JobScope | Job Market Signals & Portfolio',
+  description: 'Kaggle + Remotive job market signals, skill graph, and recommender demo — built fast as a recruiter-ready portfolio.',
+  openGraph: {
+    title: 'JobScope | Job Market Signals & Portfolio',
+    description: 'A Next.js + Tailwind dashboard with KPIs, trends, skill graph, and recommender demo from Kaggle + Remotive artifacts.',
+    url: 'https://jobscope.local',
+    type: 'website'
+  }
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
