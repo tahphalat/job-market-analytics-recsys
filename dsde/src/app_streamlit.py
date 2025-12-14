@@ -82,28 +82,47 @@ def parse_skills(raw: object) -> List[str]:
 
 @st.cache_data(show_spinner=False)
 def load_jobs(path: Path = PROCESSED_DIR / "jobs_canonical.parquet") -> pd.DataFrame:
-    if not path.exists():
-        # Check for fallback sample if main file missing
-        sample_path = path.parent / "jobs_canonical_sample.parquet"
-        if sample_path.exists():
-            path = sample_path # Use sample path instead
-            st.toast("⚠️ Using Sample Data (10k rows) for Deployment", icon="ℹ️")
-        else:
-             return pd.DataFrame()
+    df = pd.DataFrame() # Initialize df
+
+    # Case 1: Split Files (Full Data Deploy)
+    # Look for parts
+    parts = sorted(path.parent.glob("jobs_canonical_part_*.parquet"))
+    if parts:
+        st.toast(f"ℹ️ Loading {len(parts)} data chunks...", icon="📂")
+        dfs = [read_auto(p) for p in parts]
+        df = pd.concat(dfs, ignore_index=True)
+        
+        # Post-processing for combined data (timestamps, etc.)
+        df["published_at"] = pd.to_datetime(df.get("published_at"), errors="coerce", utc=True)
+        for col in ["salary_min", "salary_max"]:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors="coerce")
+        
+        # Recalculate derived
+        df["is_remote"] = df["location_text"].astype(str).str.contains("remote|work from home", case=False)
+        df["skills_parsed"] = df.get("skills", pd.Series(dtype=object)).apply(parse_skills)
+        df["skills_display"] = df["skills_parsed"].apply(lambda items: ", ".join(items))
+        
+        return df
+        
+    # Case 2: Sample Data (Fallback)
+    sample_path = path.parent / "jobs_canonical_sample.parquet"
+    if sample_path.exists():
+        st.toast("⚠️ Using Sample Data (10k rows)", icon="ℹ️")
+        df = read_auto(sample_path)
+        # Proceed to normal processing
+    else:
+         return pd.DataFrame()
+    # Normal Load (Local)
     try:
-        df = read_auto(path)
+         df = read_auto(path)
     except Exception:
-        # Fallback 1: Sample Parquet (for Deployment)
-        sample_path = path.parent / "jobs_canonical_sample.parquet"
-        if sample_path.exists():
-            st.toast("⚠️ Using Sample Data (10k rows) for Deployment", icon="ℹ️")
-            df = read_auto(sample_path)
-        else:
-            # Fallback 2: CSV (Local dev with corrupted parquet?)
-            csv_fallback = path.with_suffix(".csv")
-            if not csv_fallback.exists():
-                return pd.DataFrame()
-            df = read_auto(csv_fallback)
+        csv_fallback = path.with_suffix(".csv")
+        if not csv_fallback.exists():
+            return pd.DataFrame()
+        df = read_auto(csv_fallback)
+
+    # Common Processing (for Single File: Main or Sample)
 
     # Convert timestamps
     df["published_at"] = pd.to_datetime(df.get("published_at"), errors="coerce", utc=True)
@@ -421,14 +440,21 @@ def main():
     
     # Global Data Check
     df_check = load_jobs()
-    if not df_check.empty and len(df_check) <= 10000:
-        st.sidebar.warning(
-            "⚠️ **Demo Deployment**\n\n"
-            "This app is running on a **10,000 record sample** (Subset) "
-            "to optimize for Cloud hosting limits.\n\n"
-            "Full dataset contains ~120k+ jobs.",
-            icon="⚠️"
-        )
+    if not df_check.empty:
+        if len(df_check) <= 10000:
+            st.sidebar.warning(
+                "⚠️ **Demo Deployment (Sample)**\n\n"
+                "Running on **10k Sample Data**.\n\n"
+                "Full dataset (~120k) not loaded.",
+                icon="⚠️"
+            )
+        else:
+            st.sidebar.success(
+                f"✅ **Full Data Mode**\n\n"
+                f"Loaded **{len(df_check):,} jobs**.\n"
+                "Running on 100% of dataset.",
+                icon="🚀"
+            )
 
     nav = st.sidebar.radio("Navigation", [
         "System Overview",
