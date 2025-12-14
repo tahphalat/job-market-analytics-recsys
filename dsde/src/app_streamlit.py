@@ -83,14 +83,27 @@ def parse_skills(raw: object) -> List[str]:
 @st.cache_data(show_spinner=False)
 def load_jobs(path: Path = PROCESSED_DIR / "jobs_canonical.parquet") -> pd.DataFrame:
     if not path.exists():
-        return pd.DataFrame()
+        # Check for fallback sample if main file missing
+        sample_path = path.parent / "jobs_canonical_sample.parquet"
+        if sample_path.exists():
+            path = sample_path # Use sample path instead
+            st.toast("⚠️ Using Sample Data (10k rows) for Deployment", icon="ℹ️")
+        else:
+             return pd.DataFrame()
     try:
         df = read_auto(path)
     except Exception:
-        csv_fallback = path.with_suffix(".csv")
-        if not csv_fallback.exists():
-            return pd.DataFrame()
-        df = read_auto(csv_fallback)
+        # Fallback 1: Sample Parquet (for Deployment)
+        sample_path = path.parent / "jobs_canonical_sample.parquet"
+        if sample_path.exists():
+            st.toast("⚠️ Using Sample Data (10k rows) for Deployment", icon="ℹ️")
+            df = read_auto(sample_path)
+        else:
+            # Fallback 2: CSV (Local dev with corrupted parquet?)
+            csv_fallback = path.with_suffix(".csv")
+            if not csv_fallback.exists():
+                return pd.DataFrame()
+            df = read_auto(csv_fallback)
 
     # Convert timestamps
     df["published_at"] = pd.to_datetime(df.get("published_at"), errors="coerce", utc=True)
@@ -405,6 +418,18 @@ def render_streaming_demo():
 
 def main():
     st.sidebar.title("JobScope Analytics")
+    
+    # Global Data Check
+    df_check = load_jobs()
+    if not df_check.empty and len(df_check) <= 10000:
+        st.sidebar.warning(
+            "⚠️ **Demo Deployment**\n\n"
+            "This app is running on a **10,000 record sample** (Subset) "
+            "to optimize for Cloud hosting limits.\n\n"
+            "Full dataset contains ~120k+ jobs.",
+            icon="⚠️"
+        )
+
     nav = st.sidebar.radio("Navigation", [
         "System Overview",
         "Market Insights", 

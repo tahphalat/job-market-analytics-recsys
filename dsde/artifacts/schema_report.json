@@ -1,0 +1,474 @@
+{
+  "kaggle": {
+    "n_rows": 123849,
+    "n_cols": 31,
+    "columns": [
+      {
+        "name": "job_id",
+        "dtype": "int64",
+        "missing_rate": 0.0,
+        "example_values": [
+          "921716",
+          "1829192",
+          "10998357"
+        ]
+      },
+      {
+        "name": "company_name",
+        "dtype": "object",
+        "missing_rate": 0.01387980524671172,
+        "example_values": [
+          "Corcoran Sawyer Smith",
+          "The National Exemplar ",
+          "Abrams Fensterman, LLP"
+        ]
+      },
+      {
+        "name": "title",
+        "dtype": "object",
+        "missing_rate": 0.0,
+        "example_values": [
+          "Marketing Coordinator",
+          "Mental Health Therapist/Counselor",
+          "Assitant Restaurant Manager"
+        ]
+      },
+      {
+        "name": "description",
+        "dtype": "object",
+        "missing_rate": 5.6520440213485775e-05,
+        "example_values": [
+          "Job descriptionA leading real estate firm in New Jersey is seeking an administrative Marketing Coordinator with some experience in graphic design. You will be working closely with our fun, kind, ambitious members of the sales team and our dynamic executive team on a daily basis. This is an opportunity to be part of a fast-growing, highly respected real estate brokerage with a reputation for exceptional marketing and extraordinary culture of cooperation and inclusion.Who you are:You must be a well-organized, creative, proactive, positive, and most importantly, kind-hearted person. Please, be responsible, respectful, and cool-under-pressure. Please, be proficient in Adobe Creative Cloud (Indesign, Illustrator, Photoshop) and Microsoft Office Suite. Above all, have fantastic taste and be a good-hearted, fun-loving person who loves working with people and is eager to learn.Role:Our office is a fast-paced environment. You\u2019ll work directly with a Marketing team and communicate daily with other core staff and our large team of agents. This description is a brief overview, but your skills and interests will be considered in what you work on and as the role evolves over time.Agent Assistance- Receive & Organize Marketing Requests from Agents- Track Tasks & Communicate with Marketing team & Agents on Status- Prepare print materials and signs for open houses- Submit Orders to Printers & Communicate & Track DeadlinesGraphic Design & Branding- Managing brand strategy and messaging through website, social media, videos, online advertising, print placement and events- Receive, organize, and prioritize marketing requests from agents- Fulfill agent design requests including postcards, signs, email marketing and property brochures using pre-existing templates and creating custom designs- Maintain brand assets and generic filesEvents & Community- Plan and execute events and promotions- Manage Contacts & Vendors for Event Planning & SponsorshipsOur company is committed to creating a diverse environment and is proud to be an equal opportunity employer. All qualified applicants will receive consideration for employment without regard to race, color, religion, gender, gender identity or expression, sexual orientation, national origin, genetics, disability, age, or veteran status.Job Type: Full-time\nPay: $18-20/hour\nExpected hours: 35 \u2013 45 per week\nBenefits:Paid time offSchedule:8 hour shiftMonday to FridayExperience:Marketing: 1 year (Preferred)Graphic design: 2 years (Preferred)Work Location: In person\n",
+          "At Aspen Therapy and Wellness , we are committed to serving clients with best practices to help them with change, improvements and better quality of life. We believe in providing a secure, supportive environment to grow as a clinician and learn how to foster longevity in the career which is part of our mission statement.\nThank you for taking the time to explore a career with us. We are excited to be a new group practice in the community. If you are looking for quality supervision as you work towards licensure and ability to serve populations while accepting a variety of insurance panels, we may be a good fit. Our supervisors are trained in EMDR and utilize a parts work perspective with a trauma lens.\nWe are actively looking to hire a therapist in the area who is passionate about working with adults and committed to growth and excellence in the field. We are located in Old Town Square, Fort Collins.\nWe value and are strengthened by diversity and desire a warm and welcoming place for all people. We believe in racial and ethnic equality, gender equity and social inclusion.\nPosition Requirement Possibilities:A graduate level psychological counseling-related degreeMasters of Social Work (MSW/LSW)Licensed Professional Counselor Candidate (LPCC)Clinical Social worker (LCSW)Professional Counselor (LPC)Marriage/Family Therapist (LMFT)Relating to this?Wanting to deliver high quality mental healthcareSeeking quality supervision and growth in a healthy environmentWhat we offer:Flexible work scheduleW2 Employment - commission basedBuilding to full time workJump of 5% in commission as well as monthly bonus/stipend once full timeWeekly supervision providedPaid weekly team meetings $30/hrTwo paid wellness hours/month $30/hrTelemedicine and in-person flexibilitySupportive work environment with direct access to two supervisorsAdministrative supportApproved professional development training providedFully automated EHR and technology supportStrong work/life balanceJob Duties:Conducting intake assessmentsDeveloping and implementing treatment plans for clients based on assessment and coordinating any additional services needed, revising as necessaryConducting individual sessions as appropriate for the treatment plan of the patientApplying psychotherapeutic techniques and interventions in the delivery of services to individuals for the purpose of treating emotional and behavioral disorders that have been diagnosed in assessmentParticipating in team meetings in order to staff new cases. Presenting appropriate patient information to the team. Recommending effective treatment interventions.Building and maintaining an active caseload with assigned clientsCompleting timely progress notes and treatment updates in the EHR. Maintaining all clinical documentation in accordance with regulatory and accrediting standardsProviding crisis intervention to patients in acute distress and referring as neededPerforming case management and discharge planning as neededExcellent communication and interpersonal skillsCompassionate and empathetic approach to patient carePlease send resume and cover letter to info@aspentherapyandwellness.com\nAbout Aspen Therapy and Wellness LLCAspen Therapy and Wellness is a mental health services provider focusing on work with adults in an outpatient setting, working with a variety of mental health issues both in-person in Old Town Fort Collins and throughout the state of Colorado via telehealth services.\nPlease note that this job description is not exhaustive and additional duties may be assigned as needed.",
+          "The National Exemplar is accepting applications for an Assistant Restaurant Manager.\nWe offer highly competitive wages, healthcare, paid time off, complimentary dining privileges and bonus opportunities. \nWe are a serious, professional, long-standing neighborhood restaurant with over 41 years of service. If you are looking for a long-term fit with a best in class organization then you should apply now. \nPlease send a resumes to pardom@nationalexemplar.com. o"
+        ]
+      },
+      {
+        "name": "max_salary",
+        "dtype": "float64",
+        "missing_rate": 0.7594409321028026,
+        "example_values": [
+          "20.0",
+          "50.0",
+          "65000.0"
+        ]
+      },
+      {
+        "name": "pay_period",
+        "dtype": "object",
+        "missing_rate": 0.7087340228827039,
+        "example_values": [
+          "HOURLY",
+          "HOURLY",
+          "YEARLY"
+        ]
+      },
+      {
+        "name": "location",
+        "dtype": "object",
+        "missing_rate": 0.0,
+        "example_values": [
+          "Princeton, NJ",
+          "Fort Collins, CO",
+          "Cincinnati, OH"
+        ]
+      },
+      {
+        "name": "company_id",
+        "dtype": "float64",
+        "missing_rate": 0.013863656549507868,
+        "example_values": [
+          "2774458.0",
+          "64896719.0",
+          "766262.0"
+        ]
+      },
+      {
+        "name": "views",
+        "dtype": "float64",
+        "missing_rate": 0.013637574788653925,
+        "example_values": [
+          "20.0",
+          "1.0",
+          "8.0"
+        ]
+      },
+      {
+        "name": "med_salary",
+        "dtype": "float64",
+        "missing_rate": 0.9492930907799013,
+        "example_values": [
+          "350.0",
+          "25.0",
+          "23.0"
+        ]
+      },
+      {
+        "name": "min_salary",
+        "dtype": "float64",
+        "missing_rate": 0.7594409321028026,
+        "example_values": [
+          "17.0",
+          "30.0",
+          "45000.0"
+        ]
+      },
+      {
+        "name": "formatted_work_type",
+        "dtype": "object",
+        "missing_rate": 0.0,
+        "example_values": [
+          "Full-time",
+          "Full-time",
+          "Full-time"
+        ]
+      },
+      {
+        "name": "applies",
+        "dtype": "float64",
+        "missing_rate": 0.8117061906030731,
+        "example_values": [
+          "2.0",
+          "4.0",
+          "1.0"
+        ]
+      },
+      {
+        "name": "original_listed_time",
+        "dtype": "float64",
+        "missing_rate": 0.0,
+        "example_values": [
+          "1713397508000.0",
+          "1712857887000.0",
+          "1713277614000.0"
+        ]
+      },
+      {
+        "name": "remote_allowed",
+        "dtype": "float64",
+        "missing_rate": 0.876898481215028,
+        "example_values": [
+          "1.0",
+          "1.0",
+          "1.0"
+        ]
+      },
+      {
+        "name": "job_posting_url",
+        "dtype": "object",
+        "missing_rate": 0.0,
+        "example_values": [
+          "https://www.linkedin.com/jobs/view/921716/?trk=jobs_biz_prem_srch",
+          "https://www.linkedin.com/jobs/view/1829192/?trk=jobs_biz_prem_srch",
+          "https://www.linkedin.com/jobs/view/10998357/?trk=jobs_biz_prem_srch"
+        ]
+      },
+      {
+        "name": "application_url",
+        "dtype": "object",
+        "missing_rate": 0.29604599148963656,
+        "example_values": [
+          "www.childrensnebraska.org",
+          "https://www.kidsbookbank.org/employment/",
+          "https://wsu.wd5.myworkdayjobs.com/en-US/WSU_Jobs/job/Coordinator-for-Multicultural-Student-Organizations_R-11504?source=Linkedin"
+        ]
+      },
+      {
+        "name": "application_type",
+        "dtype": "object",
+        "missing_rate": 0.0,
+        "example_values": [
+          "ComplexOnsiteApply",
+          "ComplexOnsiteApply",
+          "ComplexOnsiteApply"
+        ]
+      },
+      {
+        "name": "expiry",
+        "dtype": "float64",
+        "missing_rate": 0.0,
+        "example_values": [
+          "1715989508000.0",
+          "1715449887000.0",
+          "1715869614000.0"
+        ]
+      },
+      {
+        "name": "closed_time",
+        "dtype": "float64",
+        "missing_rate": 0.9913362239501329,
+        "example_values": [
+          "1713207715000.0",
+          "1713212227000.0",
+          "1713463693000.0"
+        ]
+      },
+      {
+        "name": "formatted_experience_level",
+        "dtype": "object",
+        "missing_rate": 0.2374585180340576,
+        "example_values": [
+          "Entry level",
+          "Mid-Senior level",
+          "Mid-Senior level"
+        ]
+      },
+      {
+        "name": "skills_desc",
+        "dtype": "object",
+        "missing_rate": 0.9803066637599012,
+        "example_values": [
+          "Requirements: \n\nWe are seeking a College or Graduate Student (can also be completed with school) with a focus in Planning, Architecture, Real Estate Development or Management or General Business. Must be able to work in an extremely fast paced environment and able to multitask and prioritize.",
+          "We are currently accepting resumes for FOH - Asisstant Restaurant Management with a strong focus on delivering high quality customer service. Prefer 1 to 3 years FOH management experience. Candidate should be a self-starter, proactive, attentive to details and like developing others. Must have a strong sense of teamwork and strong witten and verbal communication skills. Have a keen interest in service, food and learning. Passion for excellence and doing things right.",
+          "This position requires a baseline understanding of online marketing including Search Engine Marketing, Search Engine Optimization, and campaign analytics. The ideal candidate must be an analytical and detailed dynamic, self-starter who is proactive, and able to multitask effectively. This individual must be a strategic thinker with excellent verbal and written communication, as well strong presentation skills and the ability to work independently in an organized manner."
+        ]
+      },
+      {
+        "name": "listed_time",
+        "dtype": "float64",
+        "missing_rate": 0.0,
+        "example_values": [
+          "1713397508000.0",
+          "1712857887000.0",
+          "1713277614000.0"
+        ]
+      },
+      {
+        "name": "posting_domain",
+        "dtype": "object",
+        "missing_rate": 0.3227155649217999,
+        "example_values": [
+          "arrowstaffingservices.thejobnetwork.com",
+          "williamsleagroupltd.thejobnetwork.com",
+          "bartlettroofing.thejobnetwork.com"
+        ]
+      },
+      {
+        "name": "sponsored",
+        "dtype": "int64",
+        "missing_rate": 0.0,
+        "example_values": [
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      {
+        "name": "work_type",
+        "dtype": "object",
+        "missing_rate": 0.0,
+        "example_values": [
+          "FULL_TIME",
+          "FULL_TIME",
+          "FULL_TIME"
+        ]
+      },
+      {
+        "name": "currency",
+        "dtype": "object",
+        "missing_rate": 0.7087340228827039,
+        "example_values": [
+          "USD",
+          "USD",
+          "USD"
+        ]
+      },
+      {
+        "name": "compensation_type",
+        "dtype": "object",
+        "missing_rate": 0.7087340228827039,
+        "example_values": [
+          "BASE_SALARY",
+          "BASE_SALARY",
+          "BASE_SALARY"
+        ]
+      },
+      {
+        "name": "normalized_salary",
+        "dtype": "float64",
+        "missing_rate": 0.7087340228827039,
+        "example_values": [
+          "38480.0",
+          "83200.0",
+          "55000.0"
+        ]
+      },
+      {
+        "name": "zip_code",
+        "dtype": "float64",
+        "missing_rate": 0.16852780401941073,
+        "example_values": [
+          "8540.0",
+          "80521.0",
+          "45202.0"
+        ]
+      },
+      {
+        "name": "fips",
+        "dtype": "float64",
+        "missing_rate": 0.2213582669218161,
+        "example_values": [
+          "34021.0",
+          "8069.0",
+          "39061.0"
+        ]
+      }
+    ]
+  },
+  "remotive": {
+    "n_rows": 25,
+    "n_cols": 15,
+    "columns": [
+      {
+        "name": "id",
+        "dtype": "int64",
+        "missing_rate": 0.0,
+        "example_values": [
+          "2087621",
+          "1680495",
+          "2087132"
+        ]
+      },
+      {
+        "name": "url",
+        "dtype": "object",
+        "missing_rate": 0.0,
+        "example_values": [
+          "https://remotive.com/remote-jobs/all-others/ceo-m-w-d-re-think-hospitality-2087621",
+          "https://remotive.com/remote-jobs/marketing/office-assistant-1680495",
+          "https://remotive.com/remote-jobs/all-others/executive-assistant-accountability-partner-fulltime-remote-et-hours-2087132"
+        ]
+      },
+      {
+        "name": "title",
+        "dtype": "object",
+        "missing_rate": 0.0,
+        "example_values": [
+          "\ud83c\udde9\ud83c\uddea CEO (m/w/d) Re-Think Hospitality",
+          "Office Assistant",
+          "Executive Assistant & Accountability Partner (Full\u2011Time, Remote, ET Hours)"
+        ]
+      },
+      {
+        "name": "company_name",
+        "dtype": "object",
+        "missing_rate": 0.0,
+        "example_values": [
+          "hostz hospitality AG",
+          "Coalition Technologies ",
+          "N/A"
+        ]
+      },
+      {
+        "name": "company_logo",
+        "dtype": "object",
+        "missing_rate": 0.0,
+        "example_values": [
+          "https://remotive.com/job/2087621/logo",
+          "https://remotive.com/job/1680495/logo",
+          "https://remotive.com/job/2087132/logo"
+        ]
+      },
+      {
+        "name": "category",
+        "dtype": "object",
+        "missing_rate": 0.0,
+        "example_values": [
+          "All others",
+          "Marketing",
+          "All others"
+        ]
+      },
+      {
+        "name": "tags",
+        "dtype": "object",
+        "missing_rate": 0.0,
+        "example_values": [
+          "['backbone']",
+          "['CSS' 'excel' 'frontend' 'git' 'html' 'illustrator' 'magento' 'photoshop'\n 'php' 'shopify' 'wordpress' 'MySQL' 'startup' 'responsive' 'themes'\n 'bootstrap' 'insurance' 'jQuery' 'Ajax']",
+          "['AI/ML' 'documentation' 'asana' 'executive assistant' 'SLA' 'travel']"
+        ]
+      },
+      {
+        "name": "job_type",
+        "dtype": "object",
+        "missing_rate": 0.0,
+        "example_values": [
+          "full_time",
+          "full_time",
+          "full_time"
+        ]
+      },
+      {
+        "name": "publication_date",
+        "dtype": "object",
+        "missing_rate": 0.0,
+        "example_values": [
+          "2025-12-12T14:59:14",
+          "2025-12-11T20:31:37",
+          "2025-12-11T11:18:23"
+        ]
+      },
+      {
+        "name": "candidate_required_location",
+        "dtype": "object",
+        "missing_rate": 0.0,
+        "example_values": [
+          "Germany",
+          "Worldwide",
+          "Worldwide"
+        ]
+      },
+      {
+        "name": "salary",
+        "dtype": "object",
+        "missing_rate": 0.0,
+        "example_values": [
+          "\u20ac80k-\u20ac110k",
+          "$31,2k- $52k",
+          ""
+        ]
+      },
+      {
+        "name": "description",
+        "dtype": "object",
+        "missing_rate": 0.0,
+        "example_values": [
+          "<p>\ud83c\udde9\ud83c\uddea This job ad is written in German. \ud83c\udde9\ud83c\uddea</p>\n<p>Hostz ist <strong>kein klassischer Hotelbetreiber</strong> \u2013 und genau das macht uns besonders.</p>\n<p>Wir betreiben <strong>nicht unsere eigenen Hotels</strong>,</p>\n<p>sondern erm\u00f6glichen anderen, <strong>Hotellerie professionell, effizient und skalierbar zu betreiben</strong>.</p>\n<p>Hostz wirkt dort, wo Hotellerie heute den gr\u00f6ssten Hebel hat:</p>\n<p>als <strong>operativer Backbone</strong> f\u00fcr Hotels, Serviced Apartments und Hotelketten \u2013</p>\n<p>durch das vollst\u00e4ndige Outsourcing aller Prozesse, <strong>die nicht zwingend vor Ort stattfinden m\u00fcssen</strong>.</p>\n<p>Unsere Mission:</p>\n<p>Hotellerie von unn\u00f6tiger Komplexit\u00e4t befreien, operative Exzellenz schaffen und gleichzeitig <strong>schlanke, menschliche und qualitativ hochwertige Strukturen vor Ort erm\u00f6glichen</strong>. hostz \u00fcbernimmt alles, was nicht zwingend vor Ort geschehen muss.</p>\n<p>Per <strong>Ende M\u00e4rz 2026</strong> \u00fcbergibt unsere aktuelle CEO die Rolle and eine/n ambitionierte/n Nachfolger/In.</p>\n<p>Wir suchen eine <strong>unternehmerisch denkende F\u00fchrungspers\u00f6nlichkeit</strong>, die Lust hat, Hotellerie neu zu denken \u2013 nicht steif, nicht historisch, sondern <strong>zukunftsorientiert, technologiegetrieben und wirksam</strong>.</p>\n<p>**<br>Was Hostz bewirkt**</p>\n<p>Hostz ist der <strong>unsichtbare Motor im Hintergrund moderner Hotels</strong>:</p>\n<p>Wir \u00fcbernehmen zentrale Hospitality-Prozesse wie</p>\n<p><strong>Rezeption, Reservation, G\u00e4stekommunikation, Revenue Management, Distribution, Reporting und Systemlandschaften</strong></p>\n<ul style=\"\">\n<li style=\"\">Wir erm\u00f6glichen Hotels und Ketten, <strong>mit minimalem On-Site-Team maximal professionell zu operieren</strong></li>\n<li style=\"\">Wir senken Komplexit\u00e4t, erh\u00f6hen Qualit\u00e4t und schaffen <strong>skalierbare Strukturen</strong></li>\n<li style=\"\">Wir sind der <strong>Einstieg in die Hotellerie</strong> f\u00fcr neue Betreiber</li>\n</ul>\n<p>und der <strong>Skalierungs-Backbone</strong> f\u00fcr bestehende Hotelketten</p>\n<p>Kurz:</p>\n<p><strong>Operational Excellence auf professionellem Niveau \u2013 bei maximaler Leanness vor Ort.</strong></p>\n<div class=\"h2\">\u00a0</div>\n<div class=\"h2\">Aufgaben</div>\n<p>Als CEO von Hostz f\u00fchrst du nicht ein einzelnes Hotel \u2013</p>\n<p>du baust <strong>das System, das viele Hotels besser macht</strong>.</p>\n<p>Deine Verantwortung umfasst:</p>\n<p>Gesamtverantwortung f\u00fcr <strong>Strategie, Wachstum und Profitabilit\u00e4t (P&amp;L)</strong></p>\n<ul style=\"\">\n<li style=\"\">Weiterentwicklung von Hostz als <strong>zentrale Operations-Plattform f\u00fcr Hospitality</strong></li>\n<li style=\"\">F\u00fchrung und Ausbau eines <strong>modernen, internationalen Operations- und Tech-Teams</strong></li>\n<li style=\"\">Sicherstellung h\u00f6chster <strong>operativer Qualit\u00e4t, Konsistenz und Effizienz</strong> \u00fcber alle Partner hinweg</li>\n<li style=\"\">Weiterentwicklung von <strong>Technologie, Automatisierung und datenbasierten Entscheidungsmodellen</strong></li>\n<li style=\"\">Enge Zusammenarbeit mit Hotelketten, Eigent\u00fcmern und strategischen Partnern</li>\n<li style=\"\">Positionierung von Hostz als <strong>neuer Standard f\u00fcr Hotel Operations</strong></li>\n</ul>\n<p>Diese Rolle ist <strong>unternehmerisch</strong>, gestaltend und wirkungsorientiert \u2013</p>\n<p>keine klassische Verwaltungsfunktion.</p>\n<div class=\"h2\">\u00a0</div>\n<div class=\"h2\">Qualifikation</div>\n<p>Wir suchen keine \u201eOld-School-Hoteldirektion\u201c, sondern:</p>\n<p><strong>Fundierten Hospitality-Background</strong> (z. B. EHL, Hotelfachschule oder vergleichbar)</p>\n<ul style=\"\">\n<li style=\"\"><strong>F\u00fchrungs- und Managementerfahrung</strong> in Hospitality, Serviced Apartments, Operations oder Plattformmodellen</li>\n<li style=\"\">Starkes <strong>unternehmerisches Mindset</strong> mit Ownership und Entscheidungsfreude</li>\n<li style=\"\">Interesse an <strong>Technologie, Automatisierung und skalierbaren Gesch\u00e4ftsmodellen</strong></li>\n<li style=\"\">Verst\u00e4ndnis f\u00fcr <strong>Operational Excellence, Prozesse, KPIs und Qualit\u00e4t</strong></li>\n<li style=\"\">Freude daran, Dinge neu zu denken \u2013 <strong>pragmatisch, modern und l\u00f6sungsorientiert</strong></li>\n<li style=\"\">Sehr gute Deutsch- und Englischkenntnisse</li>\n</ul>\n<p>Wichtiger als perfekte Lebensl\u00e4ufe sind:</p>\n<p><strong>Neugier, Drive, Verantwortung und echtes Interesse an moderner Hotellerie.</strong></p>\n<div class=\"h2\">\u00a0</div>\n<div class=\"h2\">Benefits</div>\n<p>Eine <strong>CEO-Rolle mit echtem Gestaltungsspielraum</strong></p>\n<ul style=\"\">\n<li style=\"\"><strong>M\u00f6glichkeit zur Beteiligung an hostz Hospitality AG</strong></li>\n<li style=\"\">Arbeiten an der <strong>Zukunft der Hotellerie</strong>, nicht an veralteten Strukturen</li>\n<li style=\"\">Ein Team mit <strong>modernem, zukunftsorientiertem Mindset</strong></li>\n<li style=\"\">Einsatz neuester Technologien, klarer Prozesse und datenbasierter Entscheidungen</li>\n<li style=\"\">Direkter Impact auf zahlreiche Hotels und Hotelketten</li>\n<li style=\"\">Kurze Entscheidungswege, hohe Eigenverantwortung, klare Haltung</li>\n<li style=\"\">HQ in Z\u00fcrich aber 100% remote Setup - Office Location in ZH steht zur Verf\u00fcgung</li>\n</ul>\n<p>Wenn du Hotellerie liebst,</p>\n<p>aber nicht glaubst, dass sie so bleiben muss, wie sie immer war \u2013</p>\n<p>wenn du Systeme bauen willst statt Einzell\u00f6sungen zu verwalten \u2013</p>\n<p>und wenn du Freude daran hast, gemeinsam mit einem starken Team etwas Neues zu etablieren: Dann freuen wir uns auf deine Bewerbung.</p>\n<img src=\"https://remotive.com/job/track/2087621/blank.gif?source=public_api\" alt=\"\"/>",
+          "<p class=\"h3\">WHY YOU SHOULD APPLY:</p>\n<p>\u00a0</p>\n<p>Coalition Technologies is devoted to delivering clients the highest quality work while providing our team a fun, thriving, and innovative environment. Along with the opportunity for tremendous career growth and rapid advancement, CT offers:</p>\n<ul style=\"\">\n<li style=\"\">The most competitive profit-sharing bonus plan in the industry, paying up to 50% of company profits to full-time employees each month!</li>\n<li style=\"\">A highly competitive Paid Time Off plan, promoting quality work-life balance.</li>\n<li style=\"\">Subsidized gym memberships to help team members feel their best.</li>\n<li style=\"\">Medical, dental, vision, and life insurance packages for all US-based team members.</li>\n<li style=\"\">International Health Insurance Reimbursement Program for all international team members, a benefit unique to Coalition.</li>\n<li style=\"\">Device upgrade and learning reimbursement programs.</li>\n<li style=\"\">Motivating career development plans with clearly defined goals and rewards.</li>\n<li style=\"\">Additional job-specific incentives and bonuses.<br><br></li>\n</ul>\n<p>Plus, 100% of our team works remotely with the support of time tracking software. Our company culture specializes in supporting remote team members, and we\u2019ve been doing so for more than a decade. CT welcomes your application, wherever in the world it's coming from!</p>\n<p class=\"h3\">\u00a0</p>\n<p class=\"h3\">YOU SHOULD HAVE:</p>\n<p>\u00a0</p>\n<ul style=\"\">\n<li style=\"\">Willingness to learn, grow, and collaborate with the team and company as a whole.</li><li style=\"\">Excellent verbal and written communication skills.</li><li style=\"\">A high level of discretion, ethics, and trustworthiness.</li><li style=\"\">Intermediate spreadsheet skills (preferred)</li><li style=\"\">Innovative thinking and a willingness to challenge existing methods where improvement is possible.</li><li style=\"\">Experience in bookkeeping / financial record keeping (preferred).</li><li style=\"\">Experience with Google Sheets or Excel, Quickbooks Online, and G-Suite (preferred).</li><li style=\"\">The availability to work 40 hours per week from 9:00 am to 6:00 pm PST.</li><li style=\"\">A reliable space to work remotely with a fast computer, quality internet, camera, microphone, and speakers.</li>\n</ul>\n<p class=\"h3\">\u00a0</p>\n<p class=\"h3\">YOUR DUTIES AND TASKS:</p>\n<p>\u00a0</p>\n<ul style=\"\">\n<li style=\"\">Answering phones and emails.</li><li style=\"\">Completing entry-level bookkeeping, including recording expenses, organizing receipts, and completing other transaction records.</li><li style=\"\">Resolving billing issues with clients and internal team members.</li><li style=\"\">Providing account access, usage reports, data analysis, and other ad hoc requests for team members.</li><li style=\"\">Supporting quality assurance checks of various internal and client facing reporting.</li><li style=\"\">Organizing new client contracts, create invoices, and process client payments.</li><li style=\"\">Contributing to internal database maintenance, upkeep and data entry.</li><li style=\"\">Researching, ordering, &amp; distributing company-wide gifts (2-3 times per year).</li><li style=\"\">Organizing company events, competitions, and special projects throughout the year.</li><li style=\"\">Facilitating company holiday, time off, and schedule variation calendars.</li>\n</ul>\n<p class=\"h5\">\u00a0</p>\n<p class=\"h5\">We are looking for talented and diligent candidates who excel in our skills tests, and will consider these candidates even if past experience or educational background criteria aren't met.</p>\n<p class=\"h5\">\u00a0</p>\n<p>*California, New York, Washington, and Colorado: starting base pay for this position ranges between $15 - $25 per hour.</p>\n<p>Compensation may vary based on factors such as experience, qualifications, skills test performance, geographic location, and seniority of the position offered. Outside of California, New York, Washington, and Colorado compensation may fall outside the above ranges.</p>\n<img src=\"https://remotive.com/job/track/1680495/blank.gif?source=public_api\" alt=\"\"/>",
+          "<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 12pt; margin-bottom: 12pt;\"><span style=\"color: #000000; background-color: transparent; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><strong>About the role</strong></span></p>\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 12pt; margin-bottom: 12pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">We are seeking a college\u2011educated, high\u2011judgment Executive Assistant to partner with a CEO and spouse across work and family operations. This is a 40 hrs/week, long\u2011term role in Eastern Time (ET). You will run complex calendars and travel, keep our \u201cfamily operating system\u201d tight, act as a gentle accountability coach for both principals, and prepare bill payments within a clear approvals workflow. We\u2019re looking for someone who leads up\u2014proactive, thoughtful, and comfortable prompting us toward better outcomes.</span></p>\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 12pt; margin-bottom: 12pt;\"><span style=\"color: #000000; background-color: transparent; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><strong>What you\u2019ll own</strong></span></p>\n<ul style=\"\">\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 12pt; margin-bottom: 0pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Calendar &amp; inbox mastery: Orchestrate a fast, high\u2011stakes calendar; defend focus time; draft agendas/briefs; triage email.</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Travel end\u2011to\u2011end: Book smart, flexible itineraries (US/UK time zones), leverage card/travel benefits, manage changes.</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Family OS (Google: Maintain a living hub of contacts, vendors, renewals, school/athletics dates, medical appointments, SOPs.</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Accountability coaching:</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n<ul style=\"\">\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Weekly 15\u2011min 1:1 with each principal to set 3 personal goals and one weekly \u201ckeystone,\u201d</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Mid\u2011week nudges,</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Friday 15\u2011min readout (progress, blockers, next experiment).</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n</ul>\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Vendors &amp; projects: Coordinate household vendors; manage multi\u2011week projects with crisp updates and measurable checkpoints.</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Bill\u2011pay prep (simple &amp; safe):</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n<ul style=\"\">\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Draft bills in BILL (formerly Bill.com) with role\u2011based approvals (you prepare; principals approve),</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Use 1Password for shared credentials (least\u2011privilege access),</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Use Privacy virtual cards for subscriptions/incidentals (merchant\u2011locked, spend caps).</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n</ul>\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 0pt; margin-bottom: 12pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Documentation &amp; improvement: Keep SOPs current; propose improvements; measure what matters.</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n</ul>\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 12pt; margin-bottom: 12pt;\"><span style=\"color: #000000; background-color: transparent; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><strong>You bring</strong></span></p>\n<ul style=\"\">\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 12pt; margin-bottom: 0pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Bachelor\u2019s degree from an accredited university.</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">5+ years supporting a founder/CEO or senior executive (remote OK).</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Exceptional written communication and executive judgment.</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Demonstrated ability to lead up\u2014anticipate needs, push back diplomatically, and improve the system.</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Tool fluency: Google Workspace, BILL, 1Password, Privacy (or quick to learn equivalents).</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Comfortable coordinating across US/UK time zones.</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 0pt; margin-bottom: 12pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Located anywhere and able to work ET hours.</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n</ul>\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 12pt; margin-bottom: 12pt;\"><span style=\"color: #000000; background-color: transparent; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><strong>Nice to have</strong></span></p>\n<ul style=\"\">\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 12pt; margin-bottom: 12pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Exposure to coaching principles (e.g., ICF\u2011style accountability, active listening), project tools (Asana/ClickUp), and travel perks (e.g., Amex FHR/Virtuoso).</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n</ul>\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 12pt; margin-bottom: 12pt;\"><span style=\"color: #000000; background-color: transparent; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><strong>Compensation &amp; terms</strong></span></p>\n<ul style=\"\">\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 12pt; margin-bottom: 0pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Salary</span></p>\n</li>\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Retention bonuses\u00a0</span></p>\n</li>\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 0pt; margin-bottom: 12pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Performance bonus opportunity tied to measurable outcomes (calendar health, on\u2011time deliverables, SLA).</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n</ul>\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 12pt; margin-bottom: 12pt;\"><span style=\"color: #000000; background-color: transparent; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><strong>How to apply</strong></span></p>\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 12pt; margin-bottom: 12pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Please submit the following.Do not use AI to generate:</span></p>\n<ol style=\"\">\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 12pt; margin-bottom: 0pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Resume (1 page) and 150\u2011word note on a complex calendar or travel problem you solved,</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n<li dir=\"ltr\" style=\"\">\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 0pt; margin-bottom: 0pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">A short writing sample you\u2019re proud of (max 300 words),</span><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><br><br></span></p>\n</li>\n</ol>\n<p><span style=\"background-color: transparent; color: #000000; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-variant-position: normal; font-variant-emoji: normal; white-space-collapse: preserve; vertical-align: baseline;\">We\u2019ll invite selected candidates to a 15\u2011minute cognitive assessment and a paid practical (60\u201390 min: inbox triage, ET calendar rebuild, and a BOS\u2194LHR travel brief).</span><span style=\"background-color: transparent; color: #000000; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-variant-position: normal; font-variant-emoji: normal; white-space-collapse: preserve; vertical-align: baseline;\"><br></span></p>\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 12pt; margin-bottom: 12pt;\"><span style=\"color: #000000; background-color: transparent; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"><strong>Trust &amp; background</strong></span></p>\n<p dir=\"ltr\" style=\"line-height: 1.38; margin-top: 12pt; margin-bottom: 12pt;\"><span style=\"color: #000000; background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Finalists will complete reference checks, a background check, and sign an NDA. </span></p>\n<img src=\"https://remotive.com/job/track/2087132/blank.gif?source=public_api\" alt=\"\"/>"
+        ]
+      },
+      {
+        "name": "company_logo_url",
+        "dtype": "object",
+        "missing_rate": 0.32,
+        "example_values": [
+          "https://remotive.com/job/1680495/logo",
+          "https://remotive.com/job/2087132/logo",
+          "https://remotive.com/job/2086540/logo"
+        ]
+      },
+      {
+        "name": "source",
+        "dtype": "object",
+        "missing_rate": 0.0,
+        "example_values": [
+          "remotive",
+          "remotive",
+          "remotive"
+        ]
+      },
+      {
+        "name": "fetched_at",
+        "dtype": "object",
+        "missing_rate": 0.0,
+        "example_values": [
+          "2025-12-14T10:27:40.843428Z",
+          "2025-12-14T10:27:40.843428Z",
+          "2025-12-14T10:27:40.843428Z"
+        ]
+      }
+    ]
+  }
+}

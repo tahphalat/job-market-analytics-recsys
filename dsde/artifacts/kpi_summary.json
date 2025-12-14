@@ -1,0 +1,51 @@
+{
+  "total_jobs": 123874,
+  "unique_companies": 24447,
+  "sources": {
+    "kaggle": 123849,
+    "remotive": 25
+  },
+  "top_locations": [
+    {
+      "location_text": "United States",
+      "count": 8125
+    },
+    {
+      "location_text": "New York, NY",
+      "count": 2756
+    },
+    {
+      "location_text": "Chicago, IL",
+      "count": 1834
+    },
+    {
+      "location_text": "Houston, TX",
+      "count": 1762
+    },
+    {
+      "location_text": "Dallas, TX",
+      "count": 1383
+    },
+    {
+      "location_text": "Atlanta, GA",
+      "count": 1363
+    },
+    {
+      "location_text": "Boston, MA",
+      "count": 1176
+    },
+    {
+      "location_text": "Austin, TX",
+      "count": 1083
+    },
+    {
+      "location_text": "Charlotte, NC",
+      "count": 1075
+    },
+    {
+      "location_text": "Phoenix, AZ",
+      "count": 1059
+    }
+  ],
+  "generated_at": "2025-12-14T10:35:28.213127+00:00"
+}

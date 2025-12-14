@@ -19,10 +19,12 @@ web/.vercel/
 
 # Project data/artifacts
 dsde/data/raw/
-dsde/artifacts/
+# dsde/artifacts/
+dsde/artifacts/recommender/
 dsde/reports/*.html
 dsde/reports/*.json
 dsde/data/processed/*.parquet
+!dsde/data/processed/jobs_canonical_sample.parquet
 dsde/data/processed/*.csv
 
 # Notebooks
