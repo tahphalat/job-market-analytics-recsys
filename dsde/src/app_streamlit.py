@@ -210,6 +210,8 @@ def render_market_insights():
             c2.metric("จำนวนบริษัท", f"{kpi.get('unique_companies', 0):,}")
             c3.metric("เงินเดือนเฉลี่ย (ประมาณ)", "$112k", delta="+4% YoY") # Mock delta for insights
             c4.metric("แหล่งข้อมูล", "Kaggle")
+            
+            st.caption("Source: [LinkedIn Job Postings (Kaggle)](https://www.kaggle.com/datasets/arshkon/linkedin-job-postings)") # Added Link
         
         st.divider()
 
