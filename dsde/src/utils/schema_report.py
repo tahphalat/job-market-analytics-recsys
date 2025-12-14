@@ -1,52 +1,53 @@
 import argparse
 import json
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, Optional, Any
 
 import pandas as pd
 
 from src.config import ARTIFACTS_DIR, RAW_KAGGLE_DIR, RAW_REMOTIVE_DIR, SEED
 from src.utils.common import set_seed
-from src.utils.io import read_csv_or_parquet
+from src.utils.io import read_auto, write_json, safe_mkdir
 from src.utils.logging import get_logger
 
 logger = get_logger(__name__)
 
 
-def generate_schema_report(df: pd.DataFrame) -> Dict[str, Dict[str, float]]:
+def schema_report(df: pd.DataFrame) -> Dict[str, Any]:
     if df is None or df.empty:
-        return {}
+        return {"n_rows": 0, "n_cols": 0, "columns": []}
+
+    def example_values(series: pd.Series, k: int = 3):
+        non_null = series.dropna().astype(str).head(k).tolist()
+        return non_null
+
+    columns = []
     total = len(df)
-    return {
-        col: {
-            "dtype": str(df[col].dtype),
-            "missing_rate": float(df[col].isna().mean()) if total else 0.0,
-        }
-        for col in df.columns
-    }
+    for col in df.columns:
+        columns.append(
+            {
+                "name": col,
+                "dtype": str(df[col].dtype),
+                "missing_rate": float(df[col].isna().mean()) if total else 0.0,
+                "example_values": example_values(df[col]),
+            }
+        )
+    return {"n_rows": int(total), "n_cols": int(len(df.columns)), "columns": columns}
 
 
 def build_report(kaggle_df: Optional[pd.DataFrame], remotive_df: Optional[pd.DataFrame]) -> Dict:
     report = {}
     if kaggle_df is not None:
-        report["kaggle"] = {
-            "rows": int(len(kaggle_df)),
-            "columns": list(kaggle_df.columns),
-            "schema": generate_schema_report(kaggle_df),
-        }
+        report["kaggle"] = schema_report(kaggle_df)
     if remotive_df is not None:
-        report["remotive"] = {
-            "rows": int(len(remotive_df)),
-            "columns": list(remotive_df.columns),
-            "schema": generate_schema_report(remotive_df),
-        }
+        report["remotive"] = schema_report(remotive_df)
     return report
 
 
 def _load_optional(path: Optional[Path]) -> Optional[pd.DataFrame]:
     if path and path.exists():
         logger.info("Loading for schema report: %s", path)
-        return read_csv_or_parquet(path)
+        return read_auto(path)
     logger.warning("Path not found for schema report: %s", path)
     return None
 
@@ -68,18 +69,17 @@ def main():
     remotive_path = Path(args.remotive_path) if args.remotive_path else None
 
     if kaggle_path is None:
-        kaggle_path = next((p for p in [RAW_KAGGLE_DIR / "jobs_kaggle_raw.parquet", RAW_KAGGLE_DIR / "jobs_kaggle_raw.csv"] if p.exists()), None)
+        kaggle_path = RAW_KAGGLE_DIR / "jobs_kaggle_raw.parquet"
     if remotive_path is None:
-        remotive_path = next((p for p in [RAW_REMOTIVE_DIR / "jobs_remotive_raw.parquet", RAW_REMOTIVE_DIR / "jobs_remotive_raw.csv"] if p.exists()), None)
+        remotive_path = RAW_REMOTIVE_DIR / "jobs_remotive_raw.parquet"
 
     kaggle_df = _load_optional(kaggle_path)
     remotive_df = _load_optional(remotive_path)
     report = build_report(kaggle_df, remotive_df)
 
     output_path = Path(args.output)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, "w") as f:
-        json.dump(report, f, indent=2)
+    safe_mkdir(output_path.parent)
+    write_json(report, output_path)
     logger.info("Schema report saved to %s", output_path)
 
 

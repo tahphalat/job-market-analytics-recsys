@@ -6,7 +6,7 @@ import pandas as pd
 
 from src.config import RAW_KAGGLE_DIR, SAMPLE_N, SEED
 from src.utils.common import set_seed
-from src.utils.io import read_csv_or_parquet
+from src.utils.io import read_auto, safe_mkdir
 from src.utils.logging import get_logger
 
 logger = get_logger(__name__)
@@ -19,24 +19,20 @@ def _auto_detect_file(out_dir: Path) -> Optional[Path]:
 
 def ingest_kaggle_file(input_path: Optional[Path], out_dir: Path, sample_n: int, seed: int) -> None:
     set_seed(seed)
-    out_dir.mkdir(parents=True, exist_ok=True)
+    safe_mkdir(out_dir)
     path = input_path or _auto_detect_file(out_dir)
     if path is None:
         raise FileNotFoundError(f"No CSV/Parquet found in {out_dir}. Specify --input_path.")
 
-    df = read_csv_or_parquet(path)
+    df = read_auto(path)
     logger.info("Loaded Kaggle file %s with rows=%s cols=%s", path, len(df), len(df.columns))
-    logger.info("Columns: %s", list(df.columns)[:15])
+    logger.info("Columns (first 20): %s", list(df.columns)[:20])
 
-    ext = path.suffix.lower()
-    raw_out = out_dir / f"jobs_kaggle_raw{ext}"
+    raw_out = out_dir / "jobs_kaggle_raw.parquet"
     sample_out = out_dir / "jobs_kaggle_raw.sample.csv"
 
-    if ext == ".parquet":
-        df.to_parquet(raw_out, index=False)
-    else:
-        df.to_csv(raw_out, index=False)
-    logger.info("Saved full Kaggle raw to %s", raw_out)
+    df.to_parquet(raw_out, index=False)
+    logger.info("Saved full Kaggle raw parquet to %s", raw_out)
 
     sample_n = min(sample_n, len(df)) if sample_n else len(df)
     sample_df = df.sample(n=sample_n, random_state=seed) if sample_n else df
@@ -53,7 +49,7 @@ def ingest_kaggle_file(input_path: Optional[Path], out_dir: Path, sample_n: int,
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Ingest Kaggle dataset file (csv/parquet).")
-    parser.add_argument("--input_path", default=None, help="Path to Kaggle file (csv/parquet). If omitted, auto-detects first CSV/Parquet in out_dir.")
+    parser.add_argument("--input_path", required=True, help="Path to Kaggle file (csv/parquet).")
     parser.add_argument("--out_dir", default=RAW_KAGGLE_DIR, help="Directory to write raw outputs.")
     parser.add_argument("--sample_n", type=int, default=SAMPLE_N, help="Sample size for preview CSV.")
     parser.add_argument("--seed", type=int, default=SEED, help="Random seed for sampling.")
