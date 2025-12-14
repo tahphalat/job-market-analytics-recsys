@@ -134,7 +134,7 @@ export function MarketInsights({
                             <div className="space-y-6">
                                 <h4 className="text-lg font-display text-primary">Skill Ecosystem</h4>
                                 <p className="text-mist/80 text-sm">
-                                    While <strong>Python</strong> and <strong>SQL</strong> are non-negotiable baselines, the demand for Cloud platforms (AWS, Azure) has now surpassed generic "Big Data" terms.
+                                    While <strong>Python</strong> and <strong>SQL</strong> are non-negotiable baselines, the demand for Cloud platforms (AWS, Azure) has now surpassed generic Big Data terms.
                                 </p>
                                 <div className="grid grid-cols-2 gap-4">
                                      <div className="p-3 bg-surface border border-white/10 rounded-lg">
