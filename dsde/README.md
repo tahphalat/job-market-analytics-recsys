@@ -12,7 +12,6 @@
 - Install deps (Python 3.11): `make -C dsde setup`
 - Pipeline help: `python dsde/src/run_all.py --help`
 - Stage targets: `make -C dsde extract`, `transform`, `eda`, `graph`, `train`, `run_all`, `smoke_test`, `export_web`
-- Default ingestion dataset: KaggleHub `arshkon/linkedin-job-postings` (override via `KAGGLE_DATASET=...`). After download, ingestion auto-detects the first CSV/Parquet in `data/raw/kaggle`; specify `KAGGLE_INPUT=...` to force a file.
 
 ## Notes
 - Column names are read from files at runtime; schema mapping handles aliases to avoid guessing.

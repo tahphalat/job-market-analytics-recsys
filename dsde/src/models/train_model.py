@@ -10,8 +10,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 
-from src.utils.common import ensure_parent, set_seed
-from src.utils.logging import get_logger
+from utils.common import ensure_parent, set_seed
+from utils.logging import get_logger
 
 logger = get_logger(__name__)
 
