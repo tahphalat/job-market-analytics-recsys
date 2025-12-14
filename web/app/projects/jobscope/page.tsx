@@ -18,7 +18,7 @@ import {
   loadTopSkills,
   loadTopTitles
 } from '../../../src/lib/artifacts/fetchers';
-import { DemoProfile, DemoRec, KpiSummary, SkillGraph, SourceCount } from '../../../src/lib/artifacts/types';
+import { DemoProfile, DemoRec, KpiSummary, SkillGraph, SkillGraphEdge, SkillGraphNode, SourceCount } from '../../../src/lib/artifacts/types';
 
 type TrendDatum = { name: string; count: number };
 
@@ -87,12 +87,11 @@ function SkillGraphTable({ graph }: { graph: SkillGraph | null }) {
   if (!graph) {
     return <p className="text-sm text-mist/70">Skill graph not available.</p>;
   }
-  const edges = (graph.edges || []).filter((e) => e.source && e.target && e.weight !== undefined);
-  const nodes = (graph.nodes || []).filter((n) => n.label);
+  const edges: SkillGraphEdge[] = (graph.edges || []).filter((e) => e.source && e.target && e.weight !== undefined);
+  const nodes: SkillGraphNode[] = (graph.nodes || []).filter((n) => n.label);
   const hasEdges = edges.length > 0;
-  const rows = hasEdges
-    ? edges.sort((a, b) => (b.weight || 0) - (a.weight || 0)).slice(0, 20)
-    : nodes.sort((a, b) => (b.count || 0) - (a.count || 0)).slice(0, 20);
+  const edgeRows = edges.sort((a, b) => (b.weight || 0) - (a.weight || 0)).slice(0, 20);
+  const nodeRows = nodes.sort((a, b) => (b.count || 0) - (a.count || 0)).slice(0, 20);
 
   return (
     <div className="overflow-x-auto">
@@ -105,21 +104,21 @@ function SkillGraphTable({ graph }: { graph: SkillGraph | null }) {
           </tr>
         </thead>
         <tbody className="divide-y divide-white/5 text-mist/90">
-          {rows.map((row, idx) =>
-            hasEdges ? (
-              <tr key={`${row.source}-${row.target}-${idx}`}>
-                <td className="py-2 pr-4">{row.source}</td>
-                <td className="py-2 pr-4">{row.target}</td>
-                <td className="py-2">{row.weight ?? '—'}</td>
-              </tr>
-            ) : (
-              <tr key={`${(row as any).label}-${idx}`}>
-                <td className="py-2 pr-4">{(row as any).label}</td>
-                <td className="py-2 pr-4">{(row as any).count ?? '—'}</td>
-                <td className="py-2">—</td>
-              </tr>
-            )
-          )}
+          {hasEdges
+            ? edgeRows.map((row, idx) => (
+                <tr key={`${row.source}-${row.target}-${idx}`}>
+                  <td className="py-2 pr-4">{row.source}</td>
+                  <td className="py-2 pr-4">{row.target}</td>
+                  <td className="py-2">{row.weight ?? '—'}</td>
+                </tr>
+              ))
+            : nodeRows.map((row, idx) => (
+                <tr key={`${row.label}-${idx}`}>
+                  <td className="py-2 pr-4">{row.label}</td>
+                  <td className="py-2 pr-4">{row.count ?? '—'}</td>
+                  <td className="py-2">—</td>
+                </tr>
+              ))}
         </tbody>
       </table>
       {!hasEdges ? <p className="mt-3 text-sm text-mist/70">No edge pairs found; showing top nodes instead.</p> : null}
