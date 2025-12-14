@@ -169,7 +169,7 @@ def render_system_overview():
         img_path = ARTIFACTS_DIR / "figures" / "architecture_diagram.png"
         if img_path.exists():
             image = Image.open(img_path)
-            st.image(image, caption="Lambda Architecture Design", use_container_width=True)
+            st.image(image, caption="Lambda Architecture Design") # Removed use_container_width for robustnes
         else:
             st.warning("Diagram image not found.")
     except Exception as e:
@@ -352,7 +352,6 @@ def render_job_browser():
     st.caption(f"Showing {len(filtered):,} jobs")
     st.dataframe(
         filtered[["title", "company", "location_text", "skills_display", "published_at"]].head(100),
-        use_container_width=True,
         hide_index=True
     )
 
