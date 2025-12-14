@@ -1,5 +1,6 @@
-import Link from 'next/link';
 import { Container } from './Container';
+import { Button } from './Button';
+import Link from 'next/link';
 
 export const Hero = () => {
   return (
@@ -14,11 +15,11 @@ export const Hero = () => {
         <p className="text-body text-muted animate-fade-in-up max-w-lg" style={{ animationDelay: '1.8s' }}>
           Real-time analysis of job postings to help you find the right skills, right now.
         </p>
-        <div className="flex gap-4 pt-4 animate-fade-in-up" style={{ animationDelay: '2s' }}>
-          <Link href="/projects/jobscope" className="text-sm font-semibold text-primary hover:text-accent transition-colors">
-            View Dashboard &rarr;
-          </Link>
-          {/* Demo temporarily disabled */}
+        <div className="flex flex-wrap gap-3 pt-4 animate-fade-in-up" style={{ animationDelay: '2s' }}>
+          <Button href="/projects/jobscope">View Dashboard</Button>
+          <Button href="https://jobscope.streamlit.app" variant="ghost" target="_blank" rel="noreferrer">
+            Open Streamlit App
+          </Button>
         </div>
       </div>
     </Container>
