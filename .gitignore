@@ -25,6 +25,7 @@ dsde/reports/*.html
 dsde/reports/*.json
 dsde/data/processed/*.parquet
 !dsde/data/processed/jobs_canonical_sample.parquet
+!dsde/data/processed/jobs_canonical_part_*.parquet
 dsde/data/processed/*.csv
 
 # Notebooks
