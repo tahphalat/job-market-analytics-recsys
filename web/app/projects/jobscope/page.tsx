@@ -20,7 +20,11 @@ function numberWithCommas(num?: number) {
 
 function percent(part: number, whole: number) {
   if (!whole) return '0%';
-  return `${Math.round((part / whole) * 100)}%`;
+  const pct = (part / whole) * 100;
+  if (pct === 0) return '0%';
+  if (pct < 0.1) return '<0.1%';
+  if (pct < 1) return `${pct.toFixed(1)}%`;
+  return `${Math.round(pct)}%`;
 }
 
 function SoWhat({ kpi }: { kpi: KpiSummary | null }) {
