@@ -82,28 +82,51 @@ def parse_skills(raw: object) -> List[str]:
 
 @st.cache_data(show_spinner=False)
 def load_jobs(path: Path = PROCESSED_DIR / "jobs_canonical.parquet") -> pd.DataFrame:
-    if not path.exists():
-        # Check for fallback sample if main file missing
+    df = pd.DataFrame()
+    data_source = None # Track source for debugging/toasts
+
+    # Priority 1: Main Parquet File (Local Dev / Full)
+    if path.exists():
+        try:
+            df = read_auto(path)
+            data_source = "main"
+        except Exception:
+            pass # Fallback to others if read fails
+
+    # Priority 2: Split Files (Cloud Deployment - Full Data)
+    if df.empty:
+        parts = sorted(path.parent.glob("jobs_canonical_part_*.parquet"))
+        if parts:
+            try:
+                # st.toast removed to prevent CacheReplayClosureError
+                dfs = [read_auto(p) for p in parts]
+                df = pd.concat(dfs, ignore_index=True)
+                data_source = "split"
+            except Exception:
+                pass
+
+    # Priority 3: Sample Data (Cloud Deployment - Fallback)
+    if df.empty:
         sample_path = path.parent / "jobs_canonical_sample.parquet"
         if sample_path.exists():
-            path = sample_path # Use sample path instead
-            st.toast("⚠️ Using Sample Data (10k rows) for Deployment", icon="ℹ️")
-        else:
-             return pd.DataFrame()
-    try:
-        df = read_auto(path)
-    except Exception:
-        # Fallback 1: Sample Parquet (for Deployment)
-        sample_path = path.parent / "jobs_canonical_sample.parquet"
-        if sample_path.exists():
-            st.toast("⚠️ Using Sample Data (10k rows) for Deployment", icon="ℹ️")
+            # st.toast removed to prevent CacheReplayClosureError
             df = read_auto(sample_path)
-        else:
-            # Fallback 2: CSV (Local dev with corrupted parquet?)
-            csv_fallback = path.with_suffix(".csv")
-            if not csv_fallback.exists():
-                return pd.DataFrame()
+            data_source = "sample"
+
+    # Priority 4: CSV Fallback (Local Dev - Repair)
+    if df.empty:
+        csv_fallback = path.with_suffix(".csv")
+        if csv_fallback.exists():
             df = read_auto(csv_fallback)
+            data_source = "csv"
+
+    if df.empty:
+        return pd.DataFrame()
+
+    # --- Common Processing ---
+    # OPTIMIZATION: Drop description_text to save memory (approx 1GB savings)
+    if "description_text" in df.columns:
+        df.drop(columns=["description_text"], inplace=True)
 
     # Convert timestamps
     df["published_at"] = pd.to_datetime(df.get("published_at"), errors="coerce", utc=True)
@@ -113,11 +136,12 @@ def load_jobs(path: Path = PROCESSED_DIR / "jobs_canonical.parquet") -> pd.DataF
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce")
     
-    # Create derived columns for filtering/charting
+    # Create derived columns
     df["is_remote"] = df["location_text"].astype(str).str.contains("remote|work from home", case=False)
     
     df["skills_parsed"] = df.get("skills", pd.Series(dtype=object)).apply(parse_skills)
     df["skills_display"] = df["skills_parsed"].apply(lambda items: ", ".join(items))
+    
     return df
 
 # --- SECTIONS ---
@@ -129,6 +153,11 @@ def render_system_overview():
     **ภาพรวมระบบ (System Architecture)**
     
     หน้านี้แสดงโครงสร้างการทำงานเบื้องหลังของ **JobScope Platform** ที่ออกแบบมาเพื่อรองรับข้อมูลขนาดใหญ่ (Big Data)
+
+    ### 📚 Data Source (แหล่งข้อมูลหลัก)
+    ระบบประมวลผลข้อมูลจาก **[LinkedIn Job Postings Dataset](https://www.kaggle.com/datasets/arshkon/linkedin-job-postings)** (via Kaggle) 
+    ซึ่งครอบคลุมประกาศงานกว่า **120,000+ รายการ** ในสหรัฐอเมริกาและทั่วโลก
+
     
     **จุดเด่นของระบบ:**
     *   **Lambda Architecture:** รองรับทั้งข้อมูลย้อนหลัง (Batch) และข้อมูลล่าสุด (Speed/Streaming) ไปพร้อมๆ กัน
@@ -145,7 +174,7 @@ def render_system_overview():
         img_path = ARTIFACTS_DIR / "figures" / "architecture_diagram.png"
         if img_path.exists():
             image = Image.open(img_path)
-            st.image(image, caption="Lambda Architecture Design", use_container_width=True)
+            st.image(image, caption="Lambda Architecture Design") # Removed use_container_width for robustnes
         else:
             st.warning("Diagram image not found.")
     except Exception as e:
@@ -233,9 +262,7 @@ def render_market_insights():
             ).properties(height=chart_height)
             st.altair_chart(chart, use_container_width=True)
             
-            st.markdown("""
-            > 💡 **Insight:** จากข้อมูลจริง พบว่าตำแหน่งกลุ่ม **Sales & Management** (เช่น Sales Manager) ยังครองตลาดภาพรวม แต่ในสาย Tech นั้น **Software Engineer** และ **Data Analyst** คือสองตำแหน่งที่โดดเด่นที่สุด
-            """)
+            st.markdown("> 💡 **Insight:** จากข้อมูลจริง พบว่าตำแหน่งกลุ่ม **Sales & Management** (เช่น Sales Manager) ยังครองตลาดภาพรวม แต่ในสาย Tech นั้น **Software Engineer** และ **Data Analyst** คือสองตำแหน่งที่โดดเด่นที่สุด")
 
     with tab2:
         st.subheader("เจาะลึกทักษะที่ตลาดต้องการ")
@@ -347,7 +374,6 @@ def render_job_browser():
     st.caption(f"Showing {len(filtered):,} jobs")
     st.dataframe(
         filtered[["title", "company", "location_text", "skills_display", "published_at"]].head(100),
-        use_container_width=True,
         hide_index=True
     )
 
@@ -440,14 +466,14 @@ def main():
     
     # Global Data Check
     df_check = load_jobs()
-    if not df_check.empty and len(df_check) <= 10000:
-        st.sidebar.warning(
-            "⚠️ **Demo Deployment**\n\n"
-            "This app is running on a **10,000 record sample** (Subset) "
-            "to optimize for Cloud hosting limits.\n\n"
-            "Full dataset contains ~120k+ jobs.",
-            icon="⚠️"
-        )
+    if not df_check.empty:
+        if len(df_check) <= 10000:
+            st.sidebar.warning(
+                "⚠️ **Demo Deployment (Sample)**\n\n"
+                "Running on **10k Sample Data**.\n\n"
+                "Full dataset (~120k) not loaded.",
+                icon="⚠️"
+            )
 
     nav = st.sidebar.radio("Navigation", [
         "System Overview",
