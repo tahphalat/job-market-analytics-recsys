@@ -203,17 +203,42 @@ def render_market_insights():
     สรุปภาพรวมสถานการณ์ตลาดแรงงานสาย Data Engineer จากข้อมูลที่รวบรวมได้ โดยแบ่งออกเป็น 3 ส่วนหลัก
     """)
 
-    tab1, tab2, tab3 = st.tabs(["📊 ภาพรวม (Overview)", "🛠️ ทักษะ (Skills)", "💰 เงินเดือน & Skill Path"])
+    tab1, tab2, tab3 = st.tabs(["📊 ภาพรวม (Overview)", "🛠️ ทักษะ (Skills)", "💰 เงินเดือน"])
 
     kpi = load_kpis()
 
     with tab1:
         st.subheader("สถานะระบบและตัวเลขสำคัญ")
+        
+        # Calculate Real Salary Metrics on the fly
+        df_real = load_jobs()
+        avg_sal_str = "N/A"
+        delta_str = None
+        
+        if not df_real.empty:
+            # Filter valid annual salaries
+            valid = df_real[
+                (df_real["salary_min"] > 10000) & 
+                (df_real["salary_min"] < 500000)
+            ].copy()
+            
+            if not valid.empty:
+                valid["avg"] = (valid["salary_min"] + valid["salary_max"]) / 2
+                overall_mean = valid["avg"].mean()
+                avg_sal_str = f"${overall_mean/1000:.1f}k"
+                
+                # Compare with Remote
+                remote_mean = valid[valid["is_remote"]]["avg"].mean()
+                if pd.notna(remote_mean):
+                    diff = remote_mean - overall_mean
+                    pct = (diff / overall_mean) * 100
+                    delta_str = f"{pct:+.1f}% (Remote vs Avg)"
+
         if kpi:
             c1, c2, c3, c4 = st.columns(4)
             c1.metric("จำนวนงานที่วิเคราะห์", f"{kpi.get('total_jobs', 0):,}", delta="Batch: Last 24h")
             c2.metric("จำนวนบริษัท", f"{kpi.get('unique_companies', 0):,}")
-            c3.metric("เงินเดือนเฉลี่ย (ประมาณ)", "$112k", delta="+4% YoY") # Mock delta for insights
+            c3.metric("เงินเดือนเฉลี่ย (Real)", avg_sal_str, delta=delta_str) 
             c4.metric("แหล่งข้อมูล", "Kaggle")
         
         st.divider()
@@ -258,51 +283,47 @@ def render_market_insights():
                  st.altair_chart(chart, use_container_width=True)
 
             with col_desc:
-                st.info("""
-                **ทักษะยอดนิยม (Top Skills):**
-                1. **Excel**: ยังคงเป็น Tool ครอบจักรวาลที่ต้องการสูงสุด
-                2. **SQL**: ภาษาหลักของ Data ที่ขาดไม่ได้
-                3. **Python**: หัวใจสำคัญของงาน Automation และ Data Science
-                """)
+                # Dynamic Top Skills Text
+                top_3_text = ""
+                if not df_skills.empty:
+                    for i, row in df_skills.head(3).iterrows():
+                        top_3_text += f"{i+1}. **{row['value']}**\n"
+                
+                st.info(f"**ทักษะยอดนิยม (Top Skills):**\n{top_3_text}")
                 st.markdown("---")
-                st.markdown("> 🔍 **Cloud Upskill**: แม้ Excel จะนำโด่ง แต่จะเห็นว่ากลุ่ม Cloud Skill (**AWS, Azure**) เริ่มมีปริมาณความต้องการไล่เลี่ยกับ Python ซึ่งสำคัญมากสำหรับ Data Engineer")
 
     with tab3:
         st.subheader("โครงสร้างเงินเดือนและการเติบโต")
         
-        c_salary, c_path = st.columns(2)
+        st.markdown("**💰 การกระจายตัวของเงินเดือน (Annual Salary)**")
         
-        with c_salary:
-            st.markdown("**💰 การกระจายตัวของเงินเดือน (Annual Salary)**")
-            salary_data = pd.DataFrame({
-                "salary": [80, 90, 95, 100, 110, 115, 120, 130, 140, 150, 160, 180, 200] * 5
-            })
-            chart = alt.Chart(salary_data).mark_bar().encode(
-                x=alt.X("salary:Q", bin=alt.Bin(maxbins=10), title="เงินเดือนต่อปี (USD k$)"),
-                y=alt.Y("count()", title="จำนวนงาน")
+        # Load real data
+        df_sal = load_jobs()
+        
+        # Filter valid salaries (Assume Annual: > 10k USD and < 500k USD to remove hourly/outliers)
+        valid_salary = df_sal[
+            (df_sal["salary_min"] > 10000) & 
+            (df_sal["salary_min"] < 500000) &
+            (df_sal["salary_min"].notna())
+        ].copy()
+        
+        if not valid_salary.empty:
+            # Use average of min/max as the representative salary
+            valid_salary["avg_salary"] = (valid_salary["salary_min"] + valid_salary["salary_max"]) / 2
+            
+            # Create Histogram from Real Data
+            chart = alt.Chart(valid_salary).mark_bar().encode(
+                x=alt.X("avg_salary:Q", bin=alt.Bin(maxbins=20), title="เงินเดือนเฉลี่ยต่อปี (USD)"),
+                y=alt.Y("count()", title="จำนวนงาน"),
+                tooltip=["count()", alt.Tooltip("avg_salary", bin=True, title="ช่วงเงินเดือน")]
             ).properties(height=300)
             st.altair_chart(chart, use_container_width=True)
-            st.caption("*ข้อมูลจากการประมาณช่วงเงินเดือนในประกาศงาน (หากระบุ)*")
-
-        with c_path:
-            st.markdown("**📈 แผนภาพการอัพสกิล (Skill Path Draft)**")
-            st.markdown("เส้นทางการเรียนรู้ที่แนะนำตามความถี่ที่พบทักษะเหล่านี้อยู่ด้วยกัน:")
             
-            st.markdown("""
-            ```mermaid
-            graph TD
-                SQL(SQL Base) --> Python(Python Scripting)
-                Python --> Spark(Big Data / Spark)
-                Spark --> Airflow(Orchestration)
-                Airflow --> Cloud[Cloud & Infra]
-                
-                style SQL fill:#e1f5fe,stroke:#01579b
-                style Cloud fill:#fce4ec,stroke:#880e4f
-            ```
-            """)
-            st.warning("""
-            **คำแนะนำ:** เริ่มต้นให้แน่นที่ **SQL & Python** ก่อน แล้วขยับไปจับ **Spark หรือ Airflow** เพื่ออัพเงินเดือนและก้าวสู่ระดับ Senior!
-            """)
+            # Show summary stats
+            mean_val = valid_salary["avg_salary"].mean()
+            st.caption(f"*วิเคราะห์จากข้อมูลจริง {len(valid_salary):,} งาน (กรองเฉพาะรายปี) | ค่าเฉลี่ย: ${mean_val:,.0f}*")
+        else:
+            st.warning("ไม่พบข้อมูลเงินเดือนที่สมบูรณ์ใน Dataset นี้")
 
 def render_job_browser():
     st.header("Job Browser")
